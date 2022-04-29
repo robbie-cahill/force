@@ -15,7 +15,7 @@ jobs:
     steps:
       - aws-s3/sync:
           arguments: --acl public-read
-          from: "v2/__generated_i18n_/"
+          from: "src/v2/__generated_i18n_/"
           to: "s3://artsy-force-production/locales"
 
   run_deepcrawl_automator:
@@ -304,7 +304,10 @@ workflows:
           <<: *not_main_or_staging_or_release
 
       - upload-locales:
-          <<: *only_main
+          context: static-sites-uploader
+          filters:
+            branches:
+              only: hack10/intl-i18next
 
       # Main build
       - artsy-remote-docker/buildkit-build:
