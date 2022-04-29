@@ -9,13 +9,24 @@ orbs:
   yarn: artsy/yarn@6.2.0
 
 jobs:
-  upload-locales:
+  upload-locales-staging:
+    docker:
+      - image: "cimg/python:3.10"
+    working_directory: ~/app
+    steps:
+      - checkout
+      - aws-s3/sync:
+          arguments: --acl public-read
+          from: "src/locales"
+          to: "s3://artsy-static-sites/locales"
+  upload-locales-production:
     docker:
       - image: "cimg/python:3.10"
     steps:
+      - checkout
       - aws-s3/sync:
           arguments: --acl public-read
-          from: "src/v2/__generated_i18n_/"
+          from: "src/locales"
           to: "s3://artsy-force-production/locales"
 
   run_deepcrawl_automator:
@@ -301,13 +312,7 @@ workflows:
   default:
     jobs:
       - detect-secrets:
-          <<: *not_main_or_staging_or_release
-
-      - upload-locales:
-          context: static-sites-uploader
-          filters:
-            branches:
-              only: hack10/intl-i18next
+        <<: *not_main_or_staging_or_release
 
       # Main build
       - artsy-remote-docker/buildkit-build:
@@ -329,6 +334,18 @@ workflows:
           pre-steps:
             - run:
                 command: echo 'export BUILD_TARGET="builder";' >> $BASH_ENV
+
+      - upload-locales-staging:
+          context: static-sites-uploader
+          filters:
+            branches:
+              only: hack10/intl-i18next
+
+      - upload-locales-production:
+          context: static-sites-uploader
+          filters:
+            branches:
+              only: release
 
       # Electron Runner build
       - artsy-remote-docker/buildkit-build:
