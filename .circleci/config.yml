@@ -9,6 +9,15 @@ orbs:
   yarn: artsy/yarn@6.2.0
 
 jobs:
+  upload-locales:
+    docker:
+      - image: "cimg/python:3.10"
+    steps:
+      - aws-s3/sync:
+          arguments: --acl public-read
+          from: "v2/__generated_i18n_/"
+          to: "s3://artsy-force-production/locales"
+
   run_deepcrawl_automator:
     docker:
       - image: cimg/base:2021.12
@@ -294,6 +303,9 @@ workflows:
       - detect-secrets:
           <<: *not_main_or_staging_or_release
 
+      - upload-locales:
+          <<: *only_main
+
       # Main build
       - artsy-remote-docker/buildkit-build:
           <<: *not_staging_or_release
@@ -421,6 +433,7 @@ workflows:
                       }
                     ]
                   }
+
 
       # Release
       - horizon/block:
