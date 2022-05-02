@@ -28,6 +28,11 @@ import {
 } from "../../Utils/badges"
 import { getENV } from "v2/Utils/getENV"
 import { DateTime } from "luxon"
+import {
+  useWebsocketContext,
+  WebsocketContextProvider,
+} from "v2/System/WebsocketContext"
+import { useEffect } from "react"
 
 export interface ArtworkSidebarProps {
   artwork: ArtworkSidebar_artwork
@@ -61,27 +66,21 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
     biddingEndAt
   )
 
-  React.useEffect(() => {
-    const actionCable = require("actioncable")
-    const CableApp = {} as any
-    CableApp.cable = actionCable.createConsumer(getENV("GRAVITY_WEBSOCKET_URL"))
+  const { createSubscription } = useWebsocketContext()
 
-    CableApp.cable.subscriptions.create(
-      {
-        channel: "SalesChannel",
-        sale_id: sale?.internalID,
+  useEffect(() => {
+    createSubscription({
+      channel: "SalesChannel",
+      saleID: sale?.internalID,
+      onReceived: data => {
+        console.log("received", data)
+        if (data.lot_id) {
+          setWebSocketBiddingEndAt(
+            DateTime.fromISO(data.extended_bidding_end_at)
+          )
+        }
       },
-      {
-        received(data) {
-          console.log("received", data)
-          if (data.lot_id) {
-            setWebSocketBiddingEndAt(
-              DateTime.fromISO(data.extended_bidding_end_at)
-            )
-          }
-        },
-      }
-    )
+    })
   }, [])
 
   const { hasEnded } = useTimer(websocketBiddingEndAt!, startAt!)
@@ -147,7 +146,13 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
 }
 
 export const ArtworkSidebarFragmentContainer = createFragmentContainer(
-  ArtworkSidebar,
+  (props: ArtworkSidebarProps) => {
+    return (
+      <WebsocketContextProvider>
+        <ArtworkSidebar {...props} />
+      </WebsocketContextProvider>
+    )
+  },
   {
     artwork: graphql`
       fragment ArtworkSidebar_artwork on Artwork {
