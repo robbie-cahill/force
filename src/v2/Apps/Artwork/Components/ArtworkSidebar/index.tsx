@@ -26,6 +26,8 @@ import {
   shouldRenderBuyerGuaranteeAndSecurePayment,
   shouldRenderVerifiedSeller,
 } from "../../Utils/badges"
+import { getENV } from "v2/Utils/getENV"
+import { DateTime } from "luxon"
 
 export interface ArtworkSidebarProps {
   artwork: ArtworkSidebar_artwork
@@ -49,18 +51,44 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
   const biddingEndAt = extendedBiddingEndAt ?? endAt
 
   const startAt = sale?.startAt
-  const { hasEnded } = useTimer(biddingEndAt!, startAt!)
-
-  const shouldHideDetailsCreateAlertCTA =
-    (is_in_auction && hasEnded) ||
-    (is_in_auction && lotIsClosed(sale, saleArtwork)) ||
-    is_sold
 
   const shouldRenderArtworkBadges =
     shouldRenderAuthenticityCertificate(artwork) ||
     shouldRenderVerifiedSeller(artwork) ||
     shouldRenderBuyerGuaranteeAndSecurePayment(artwork)
 
+  const [websocketBiddingEndAt, setWebSocketBiddingEndAt] = React.useState(
+    biddingEndAt
+  )
+
+  React.useEffect(() => {
+    const actionCable = require("actioncable")
+    const CableApp = {} as any
+    CableApp.cable = actionCable.createConsumer(getENV("GRAVITY_WEBSOCKET_URL"))
+
+    CableApp.cable.subscriptions.create(
+      {
+        channel: "SalesChannel",
+        sale_id: sale?.internalID,
+      },
+      {
+        received(data) {
+          console.log("received", data)
+          if (data.lot_id) {
+            setWebSocketBiddingEndAt(
+              DateTime.fromISO(data.extended_bidding_end_at)
+            )
+          }
+        },
+      }
+    )
+  }, [])
+
+  const { hasEnded } = useTimer(websocketBiddingEndAt!, startAt!)
+  const shouldHideDetailsCreateAlertCTA =
+    (is_in_auction && hasEnded) ||
+    (is_in_auction && lotIsClosed(sale, saleArtwork)) ||
+    is_sold
   return (
     <ArtworkSidebarContainer data-test={ContextModule.artworkSidebar}>
       <ArtworkSidebarArtistsFragmentContainer artwork={artwork} />
@@ -149,6 +177,7 @@ export const ArtworkSidebarFragmentContainer = createFragmentContainer(
         sale {
           is_closed: isClosed
           startAt
+          internalID
         }
         saleArtwork {
           endAt

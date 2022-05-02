@@ -17,6 +17,7 @@ export type ArtworkSidebar_artwork = {
     readonly sale: {
         readonly is_closed: boolean | null;
         readonly startAt: string | null;
+        readonly internalID: string;
     } | null;
     readonly saleArtwork: {
         readonly endAt: string | null;
@@ -120,6 +121,13 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "startAt",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "internalID",
           "storageKey": null
         }
       ],
@@ -231,5 +239,5 @@ const node: ReaderFragment = {
   "type": "Artwork",
   "abstractKey": null
 };
-(node as any).hash = 'b5b1ff7a4a5ab1e29e12c08ac65585d5';
+(node as any).hash = '0105852fb7ec4ad6046c1aaaece0fa84';
 export default node;

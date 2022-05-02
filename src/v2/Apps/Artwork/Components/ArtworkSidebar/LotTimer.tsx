@@ -5,6 +5,9 @@ import { Text, Spacer, Box } from "@artsy/palette"
 import { useTimer } from "v2/Utils/Hooks/useTimer"
 import { getSaleOrLotTimerInfo } from "v2/Utils/getSaleOrLotTimerInfo"
 import { ArtworkSidebarAuctionProgressBar } from "./ArtworkSidebarAuctionProgressBar"
+import { useEffect } from "react"
+import { getENV } from "v2/Utils/getENV"
+import { DateTime } from "luxon"
 
 export interface LotTimerProps {
   saleArtwork: LotTimer_saleArtwork
@@ -13,14 +16,46 @@ export interface LotTimerProps {
 export const LotTimer: React.FC<LotTimerProps> = ({ saleArtwork }) => {
   const { endAt, extendedBiddingEndAt } = saleArtwork
 
-  const startAt = saleArtwork?.sale?.startAt
+  const startAt = saleArtwork.sale?.startAt
   const extendedBiddingPeriodMinutes =
-    saleArtwork?.sale?.extendedBiddingPeriodMinutes
+    saleArtwork.sale?.extendedBiddingPeriodMinutes
   const extendedBiddingIntervalMinutes =
-    saleArtwork?.sale?.extendedBiddingIntervalMinutes
+    saleArtwork.sale?.extendedBiddingIntervalMinutes
 
   const biddingEndAt = extendedBiddingEndAt ?? endAt
-  const { hasEnded, time, hasStarted } = useTimer(biddingEndAt!, startAt!)
+
+  const [websocketBiddingEndAt, setWebSocketBiddingEndAt] = React.useState(
+    biddingEndAt
+  )
+  const [isExtended, setIsExtended] = React.useState(false)
+
+  useEffect(() => {
+    const actionCable = require("actioncable")
+    const CableApp = {} as any
+    CableApp.cable = actionCable.createConsumer(getENV("GRAVITY_WEBSOCKET_URL"))
+
+    CableApp.cable.subscriptions.create(
+      {
+        channel: "SalesChannel",
+        sale_id: saleArtwork.sale?.internalID,
+      },
+      {
+        received(data) {
+          if (data.lot_id) {
+            setWebSocketBiddingEndAt(
+              DateTime.fromISO(data.extended_bidding_end_at)
+            )
+            setIsExtended(true)
+          }
+        },
+      }
+    )
+  }, [])
+
+  const { hasEnded, time, hasStarted } = useTimer(
+    websocketBiddingEndAt!,
+    startAt!
+  )
 
   if (!endAt) {
     return null
@@ -30,7 +65,9 @@ export const LotTimer: React.FC<LotTimerProps> = ({ saleArtwork }) => {
     hasStarted,
     lotsAreClosing: false,
     isSaleInfo: false,
-    extendedBiddingEndAt,
+    extendedBiddingEndAt: isExtended
+      ? websocketBiddingEndAt
+      : extendedBiddingEndAt,
   })
 
   return (
@@ -74,6 +111,7 @@ export const LotTimerFragmentContainer = createFragmentContainer(LotTimer, {
         startAt
         extendedBiddingPeriodMinutes
         extendedBiddingIntervalMinutes
+        internalID
       }
     }
   `,
