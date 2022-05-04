@@ -271,6 +271,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.1.9",
+    "@types/actioncable": "^5.2.7",
     "@types/autosuggest-highlight": "3.1.0",
     "@types/dd-trace": "0.6.0",
     "@types/dedent": "0.7.0",

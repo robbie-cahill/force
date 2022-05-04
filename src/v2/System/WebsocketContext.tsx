@@ -1,41 +1,67 @@
-import { createContext, useContext, useMemo, useState } from "react"
+import { Cable, Channel, Subscriptions } from "actioncable"
+import { createContext, useContext, useMemo } from "react"
 import { getENV } from "v2/Utils/getENV"
 import { useDidMount } from "v2/Utils/Hooks/useDidMount"
 
 interface WebsocketProps {
-  websockets: any
-  createSubscription: any
+  cable: Cable | null
+  createSubscription: (props: {
+    channel: string
+    saleID: string
+    onReceived: (data: any) => void
+  }) => ReturnType<Subscriptions["create"]>
+  getSubscription: (subscriptionKey: string) => Channel | null
 }
 
-const WebsocketContext = createContext<WebsocketProps>({
-  websockets: null,
-  createSubscription: null,
-})
+const initialValues = {
+  cable: null,
+  createSubscription: x => x,
+  getSubscription: x => x,
+}
 
-export const WebsocketContextProvider: React.FC<{}> = ({ children }) => {
+const WebsocketContext = createContext<WebsocketProps>(initialValues)
+
+export const WebsocketContextProvider: React.FC = ({ children }) => {
   const isMounted = useDidMount()
-  const websocketURL = getENV("GRAVITY_WEBSOCKET_URL")
 
-  const [subscriptions, setSubscriptions] = useState({})
-
-  const websockets = useMemo(() => {
+  const cable = useMemo(() => {
     if (!isMounted) {
       return null
     }
     const actionCable = require("actioncable")
-    return actionCable.createConsumer(websocketURL)
-  }, [websocketURL, isMounted])
 
-  console.log("in context", websockets)
-  console.log("subscriptions", subscriptions)
+    const cable: Cable = actionCable.createConsumer(
+      getENV("GRAVITY_WEBSOCKET_URL")
+    )
+
+    return cable
+  }, [isMounted])
+
+  // Due to SSR issues, we need to return a stub of the context during the
+  // initial pass. Once mounted we can return the proper websocket
+  if (!isMounted) {
+    return (
+      <WebsocketContext.Provider value={initialValues}>
+        {children}
+      </WebsocketContext.Provider>
+    )
+  }
+
   const contextValues = {
-    websockets,
+    cable,
     createSubscription: ({ channel, saleID, onReceived }) => {
-      const subscriptionKey = `${channel}|${saleID}`
-      const existingSubscription = subscriptions[subscriptionKey]
-      if (existingSubscription) return existingSubscription
+      if (!cable) {
+        return null
+      }
 
-      const subscription = websockets.subscriptions.create(
+      const subscriptionKey = `${channel}|${saleID}`
+      const existingSubscription = cable.subscriptions[subscriptionKey]
+
+      if (existingSubscription) {
+        return existingSubscription
+      }
+
+      const subscription = cable.subscriptions.create(
         {
           channel,
           sale_id: saleID,
@@ -47,16 +73,14 @@ export const WebsocketContextProvider: React.FC<{}> = ({ children }) => {
         }
       )
 
-      // setSubscriptions({
-      //   ...subscriptions,
-      //   subscriptionKey: subscription,
-      // })
-
       return subscription
     },
-    // getSubscription: channelName => {
-    //   return websockets.subscriptions[channelName]
-    // },
+    getSubscription: subscriptionKey => {
+      if (!cable) {
+        return null
+      }
+      return cable.subscriptions[subscriptionKey]
+    },
   }
 
   return (
@@ -70,19 +94,3 @@ export const useWebsocketContext = () => {
   const websocketContext = useContext(WebsocketContext) ?? {}
   return websocketContext
 }
-
-// export const useWebsocketSubscription = channelName => {
-//   const { getSubscription } = useWebsocketContext()
-//   const subscription = getSubscription(channelName)
-//   return subscription
-// }
-
-// export const useCreateWebsocketSubscription = ({
-//   channelName,
-//   data,
-//   onChange,
-// }) => {
-//   const { createSubscription } = useWebsocketContext()
-//   const subscription = createSubscription({ channelName, data, onChange })
-//   return subscription
-// }

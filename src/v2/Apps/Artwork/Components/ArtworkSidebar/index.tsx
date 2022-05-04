@@ -68,20 +68,17 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
 
   const { createSubscription } = useWebsocketContext()
 
-  useEffect(() => {
-    createSubscription({
-      channel: "SalesChannel",
-      saleID: sale?.internalID,
-      onReceived: data => {
-        console.log("received", data)
-        if (data.lot_id) {
-          setWebSocketBiddingEndAt(
-            DateTime.fromISO(data.extended_bidding_end_at)
-          )
-        }
-      },
-    })
-  }, [])
+  createSubscription({
+    channel: "SalesChannel",
+    saleID: sale?.internalID!,
+    onReceived: data => {
+      console.log("received", data)
+      if (data.lot_id) {
+        setWebSocketBiddingEndAt(DateTime.fromISO(data.extended_bidding_end_at))
+      }
+    },
+  })
+  // }, [])
 
   const { hasEnded } = useTimer(websocketBiddingEndAt!, startAt!)
   const shouldHideDetailsCreateAlertCTA =
