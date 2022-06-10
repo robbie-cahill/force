@@ -5,6 +5,8 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type AuctionApp_sale = {
+    readonly startAt: string | null;
+    readonly endAt: string | null;
     readonly internalID: string;
     readonly slug: string;
     readonly isClosed: boolean | null;
@@ -21,7 +23,7 @@ export type AuctionApp_sale = {
     readonly cascadingEndTimeIntervalMinutes: number | null;
     readonly extendedBiddingIntervalMinutes: number | null;
     readonly status: string | null;
-    readonly " $fragmentRefs": FragmentRefs<"AuctionMeta_sale" | "AuctionAssociatedSale_sale" | "AuctionBuyNowRail_sale" | "AuctionDetails_sale">;
+    readonly " $fragmentRefs": FragmentRefs<"AuctionMeta_sale" | "AuctionAssociatedSale_sale" | "AuctionBuyNowRail_sale" | "AuctionDetails_sale" | "AuctionArtworkGrid_sale">;
     readonly " $refType": "AuctionApp_sale";
 };
 export type AuctionApp_sale$data = AuctionApp_sale;
@@ -49,6 +51,20 @@ return {
   "metadata": null,
   "name": "AuctionApp_sale",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "startAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endAt",
+      "storageKey": null
+    },
     (v0/*: any*/),
     {
       "alias": null,
@@ -159,11 +175,16 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "AuctionDetails_sale"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AuctionArtworkGrid_sale"
     }
   ],
   "type": "Sale",
   "abstractKey": null
 };
 })();
-(node as any).hash = '51c8c4d7355b2e156a103e4f78bed713';
+(node as any).hash = 'e05c6c460922365f418eef04ca6873fe';
 export default node;

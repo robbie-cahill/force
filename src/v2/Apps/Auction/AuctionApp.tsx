@@ -19,6 +19,10 @@ import { useEffect } from "react"
 import { useAuctionTracking } from "./Hooks/useAuctionTracking"
 import { AuctionCurrentAuctionsRailFragmentContainer } from "./Components/AuctionCurrentAuctionsRail"
 import { WebsocketContextProvider } from "v2/System/WebsocketContext"
+import { useTimer } from "v2/Utils/Hooks/useTimer"
+import { AuctionArtworkGridPaginationContainer } from "./Components/AuctionArtworkGrid"
+import { useCurrentTime } from "v2/Utils/Hooks/useCurrentTime"
+import { DateTime, Duration } from "luxon"
 
 export interface AuctionAppProps {
   me: AuctionApp_me
@@ -54,6 +58,17 @@ export const AuctionApp: React.FC<AuctionAppProps> = ({
     extendedBiddingIntervalMinutes,
     internalID,
   } = sale
+
+  // TODO: Proper field in MP which returns true if lots are closing
+  // in a cascading auction.
+  const shouldShowOpenClosedGrid = true
+  const ArtworkComponent = () => {
+    return shouldShowOpenClosedGrid ? (
+      <AuctionArtworkGridPaginationContainer sale={sale} status={"OPEN"} />
+    ) : (
+      <AuctionArtworkFilterRefetchContainer viewer={viewer} />
+    )
+  }
 
   const isFullBleedHeaderFixed = !cascadingEndTimeIntervalMinutes
 
@@ -151,7 +166,7 @@ export const AuctionApp: React.FC<AuctionAppProps> = ({
                 <AuctionCurrentAuctionsRailFragmentContainer viewer={viewer} />
               </>
             ) : (
-              <AuctionArtworkFilterRefetchContainer viewer={viewer} />
+              <ArtworkComponent />
             )}
 
             <Box>{children}</Box>
@@ -184,7 +199,10 @@ export const AuctionAppFragmentContainer = createFragmentContainer(AuctionApp, {
       ...AuctionAssociatedSale_sale
       ...AuctionBuyNowRail_sale
       ...AuctionDetails_sale
+      ...AuctionArtworkGrid_sale
 
+      startAt
+      endAt
       internalID
       slug
       isClosed
