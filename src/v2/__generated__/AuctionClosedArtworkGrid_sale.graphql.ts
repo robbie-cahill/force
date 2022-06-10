@@ -4,7 +4,7 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type AuctionArtworkGrid_sale = {
+export type AuctionClosedArtworkGrid_sale = {
     readonly internalID: string;
     readonly artworksConnection: {
         readonly edges: ReadonlyArray<{
@@ -18,12 +18,12 @@ export type AuctionArtworkGrid_sale = {
         };
         readonly " $fragmentRefs": FragmentRefs<"ArtworkGrid_artworks">;
     } | null;
-    readonly " $refType": "AuctionArtworkGrid_sale";
+    readonly " $refType": "AuctionClosedArtworkGrid_sale";
 };
-export type AuctionArtworkGrid_sale$data = AuctionArtworkGrid_sale;
-export type AuctionArtworkGrid_sale$key = {
-    readonly " $data"?: AuctionArtworkGrid_sale$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"AuctionArtworkGrid_sale">;
+export type AuctionClosedArtworkGrid_sale$data = AuctionClosedArtworkGrid_sale;
+export type AuctionClosedArtworkGrid_sale$key = {
+    readonly " $data"?: AuctionClosedArtworkGrid_sale$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"AuctionClosedArtworkGrid_sale">;
 };
 
 
@@ -49,7 +49,7 @@ const node: ReaderFragment = {
       }
     ]
   },
-  "name": "AuctionArtworkGrid_sale",
+  "name": "AuctionClosedArtworkGrid_sale",
   "selections": [
     {
       "alias": null,
@@ -64,12 +64,12 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "status",
-          "value": "OPEN"
+          "value": "CLOSED"
         }
       ],
       "concreteType": "ArtworkConnection",
       "kind": "LinkedField",
-      "name": "__AuctionArtworkGrid_artworksConnection_connection",
+      "name": "__AuctionClosedArtworkGrid_artworksConnection_connection",
       "plural": false,
       "selections": [
         {
@@ -146,11 +146,11 @@ const node: ReaderFragment = {
           "name": "ArtworkGrid_artworks"
         }
       ],
-      "storageKey": "__AuctionArtworkGrid_artworksConnection_connection(status:\"OPEN\")"
+      "storageKey": "__AuctionClosedArtworkGrid_artworksConnection_connection(status:\"CLOSED\")"
     }
   ],
   "type": "Sale",
   "abstractKey": null
 };
-(node as any).hash = '6e464d3a7399f1b9ae8ea059d99234d5';
+(node as any).hash = 'e010102d3328a1251571ff3532b48bf2';
 export default node;

@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@artsy/palette"
+import { Box, Button, Spacer, Text } from "@artsy/palette"
 import { FC, useState } from "react"
 import {
   createPaginationContainer,
@@ -9,15 +9,14 @@ import ArtworkGrid from "v2/Components/ArtworkGrid"
 import { ArtworkGridContextProvider } from "v2/Components/ArtworkGrid/ArtworkGridContext"
 import { useSystemContext } from "v2/System"
 import { AuctionArtworkGrid_sale } from "v2/__generated__/AuctionArtworkGrid_sale.graphql"
+import { AuctionClosedArtworkGridQueryRenderer } from "./AuctionClosedArtworkGrid"
 
 interface AuctionArtworkGridProps {
   relay: RelayPaginationProp
   sale: AuctionArtworkGrid_sale
-  status: "OPEN" | "CLOSED"
 }
 
 export const AuctionArtworkGrid: FC<AuctionArtworkGridProps> = ({
-  status,
   sale,
   relay,
 }) => {
@@ -35,13 +34,26 @@ export const AuctionArtworkGrid: FC<AuctionArtworkGridProps> = ({
     })
   }
 
-  // Zero state
+  const ShowMoreComponent = () =>
+    relay.hasMore() ? (
+      <Box textAlign="center" mt={4}>
+        <Button onClick={handleClick} loading={loading}>
+          Show More
+        </Button>
+      </Box>
+    ) : (
+      <>
+        <Spacer mt={2} />
+        <AuctionClosedArtworkGridQueryRenderer saleID={sale.internalID} />
+      </>
+    )
 
   return (
     <>
       <Text variant="lg-display" as="h3">
         Open Lots
       </Text>
+      <Spacer mt={2} />
       <ArtworkGridContextProvider isAuctionArtwork>
         <ArtworkGrid
           artworks={sale.artworksConnection!}
@@ -50,13 +62,7 @@ export const AuctionArtworkGrid: FC<AuctionArtworkGridProps> = ({
           user={user}
         />
       </ArtworkGridContextProvider>
-      {relay.hasMore() && (
-        <Box textAlign="center" mt={4}>
-          <Button onClick={handleClick} loading={loading}>
-            Show More
-          </Button>
-        </Box>
-      )}
+      <ShowMoreComponent />
     </>
   )
 }
@@ -76,7 +82,7 @@ export const AuctionArtworkGridPaginationContainer = createPaginationContainer(
       fragment AuctionArtworkGrid_sale on Sale
         @argumentDefinitions(after: { type: "String" }) {
         internalID
-        artworksConnection(first: 15, after: $after)
+        artworksConnection(first: 15, after: $after, status: OPEN)
           @connection(key: "AuctionArtworkGrid_artworksConnection") {
           edges {
             node {
