@@ -10,6 +10,8 @@ export async function getConsentAndLoad(
 ) {
   const consent = await getConsent()
 
+  console.log('got consent: ', consent)
+
   if (consent === previousConsent) {
     // consent didn't change, nothing to do.
 

@@ -37,6 +37,7 @@ export function loadSegment() {
 }
 
 async function reconsentHook() {
+  console.log("onetrust called re-consent hook")
   PREVIOUS_CONSENT = await getConsentAndLoad(
     SEGMENT_DESTINATIONS,
     PREVIOUS_CONSENT,
