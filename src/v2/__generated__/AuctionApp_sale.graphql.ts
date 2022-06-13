@@ -10,6 +10,7 @@ export type AuctionApp_sale = {
     readonly internalID: string;
     readonly slug: string;
     readonly isClosed: boolean | null;
+    readonly isLotsClosing: boolean;
     readonly eligibleSaleArtworksCount: number | null;
     readonly coverImage: {
         readonly url: string | null;
@@ -78,6 +79,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "isClosed",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isLotsClosing",
       "storageKey": null
     },
     {
@@ -186,5 +194,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'e05c6c460922365f418eef04ca6873fe';
+(node as any).hash = 'ef41bbaa05252d38a1ff54fbd4028139';
 export default node;

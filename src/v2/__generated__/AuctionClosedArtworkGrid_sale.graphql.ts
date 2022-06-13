@@ -63,6 +63,11 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Literal",
+          "name": "cached",
+          "value": false
+        },
+        {
+          "kind": "Literal",
           "name": "status",
           "value": "CLOSED"
         }
@@ -146,11 +151,11 @@ const node: ReaderFragment = {
           "name": "ArtworkGrid_artworks"
         }
       ],
-      "storageKey": "__AuctionClosedArtworkGrid_artworksConnection_connection(status:\"CLOSED\")"
+      "storageKey": "__AuctionClosedArtworkGrid_artworksConnection_connection(cached:false,status:\"CLOSED\")"
     }
   ],
   "type": "Sale",
   "abstractKey": null
 };
-(node as any).hash = 'e010102d3328a1251571ff3532b48bf2';
+(node as any).hash = '83e153e9aed1f1f9f6a9666b4e8862e8';
 export default node;

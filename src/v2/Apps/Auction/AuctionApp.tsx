@@ -54,13 +54,11 @@ export const AuctionApp: React.FC<AuctionAppProps> = ({
     cascadingEndTimeIntervalMinutes,
     extendedBiddingIntervalMinutes,
     internalID,
+    isLotsClosing,
   } = sale
 
-  // TODO: Proper field in MP which returns true if lots are closing
-  // in a cascading auction.
-  const shouldShowOpenClosedGrid = true
   const ArtworkComponent = () =>
-    shouldShowOpenClosedGrid ? (
+    isLotsClosing ? (
       <AuctionArtworkGridPaginationContainer sale={sale} />
     ) : (
       <AuctionArtworkFilterRefetchContainer viewer={viewer} />
@@ -202,6 +200,7 @@ export const AuctionAppFragmentContainer = createFragmentContainer(AuctionApp, {
       internalID
       slug
       isClosed
+      isLotsClosing
       eligibleSaleArtworksCount
       coverImage {
         url(version: ["wide", "source", "large_rectangle"])

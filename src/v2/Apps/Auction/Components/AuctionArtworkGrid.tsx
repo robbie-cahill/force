@@ -82,8 +82,12 @@ export const AuctionArtworkGridPaginationContainer = createPaginationContainer(
       fragment AuctionArtworkGrid_sale on Sale
         @argumentDefinitions(after: { type: "String" }) {
         internalID
-        artworksConnection(first: 15, after: $after, status: OPEN)
-          @connection(key: "AuctionArtworkGrid_artworksConnection") {
+        artworksConnection(
+          first: 15
+          after: $after
+          status: OPEN
+          cached: false
+        ) @connection(key: "AuctionArtworkGrid_artworksConnection") {
           edges {
             node {
               id

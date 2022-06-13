@@ -88,6 +88,10 @@ export const auctionRoutes: AppRouteConfig[] = [
         },
       }
     },
+    // TODO: Use `cached: false` when requesting the open/closed artwork grid
+    cacheConfig: {
+      force: true,
+    },
     children: [
       { path: "" },
       {
