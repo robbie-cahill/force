@@ -139,7 +139,7 @@ export const BankDebitProvider: FC<Props> = ({
           />
         </Elements>
       )}
-      {bankDebitSetupError && <BankSetupErrorMessage />}
+      {!clientSecret && bankDebitSetupError && <BankSetupErrorMessage />}
     </div>
   )
 }
