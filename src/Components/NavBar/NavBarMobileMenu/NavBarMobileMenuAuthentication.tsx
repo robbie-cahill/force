@@ -88,6 +88,10 @@ export const NavBarMobileMenuLoggedIn: React.FC<NavBarMobileMenuLoggedInProps> =
         )}
       </NavBarMobileMenuItemLink>
 
+      <NavBarMobileMenuItemLink to="/favorites">
+        Favorites
+      </NavBarMobileMenuItemLink>
+
       <NavBarMobileMenuItemLink to="/works-for-you">
         Works for you
       </NavBarMobileMenuItemLink>

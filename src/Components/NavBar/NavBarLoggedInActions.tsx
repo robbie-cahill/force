@@ -7,6 +7,7 @@ import {
   Dropdown,
   EnvelopeIcon,
   Flex,
+  HeartIcon,
   SoloIcon,
 } from "@artsy/palette"
 import { graphql } from "relay-runtime"
@@ -41,6 +42,9 @@ export const NavBarLoggedInActions: React.FC<Partial<
 
   return (
     <>
+      <NavBarItemLink href="/favorites">
+        <HeartIcon title="Favorites" />
+      </NavBarItemLink>
       <Dropdown
         zIndex={Z.dropdown}
         dropdown={<NavBarNotificationsQueryRenderer />}
