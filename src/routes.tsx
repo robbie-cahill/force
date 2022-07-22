@@ -24,6 +24,7 @@ import { exampleRoutes } from "Apps/Example/exampleRoutes"
 import { fairOrganizerRoutes } from "./Apps/FairOrginizer/fairOrganizerRoutes"
 import { fairRoutes } from "Apps/Fair/fairRoutes"
 import { fairsRoutes } from "Apps/Fairs/fairsRoutes"
+import { favoritesRoutes } from "Apps/Favorites/favoritesRoutes"
 import { featureRoutes } from "Apps/Feature/featureRoutes"
 import { geneRoutes } from "Apps/Gene/geneRoutes"
 import { homeRoutes } from "Apps/Home/homeRoutes"
@@ -73,6 +74,7 @@ export const getAppRoutes = (): AppRouteConfig[] => {
     { routes: fairOrganizerRoutes },
     { routes: fairRoutes },
     { routes: fairsRoutes },
+    { routes: favoritesRoutes },
     { routes: featureRoutes },
     { routes: geneRoutes },
     { routes: homeRoutes },
