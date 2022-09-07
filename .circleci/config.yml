@@ -218,7 +218,7 @@ jobs:
 
   smoke-test-on-live-env:
     docker:
-      - image: cypress/included:7.0.1
+      - image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/force:$CIRCLE_SHA1-builder
         environment:
           TERM: xterm
     working_directory: ~/app
