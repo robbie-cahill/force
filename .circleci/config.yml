@@ -224,6 +224,9 @@ jobs:
     working_directory: ~/app
     parallelism: 6
     steps:
+      - run:
+          name: Install Git
+          command: apt-get -qq update && apt-get -qq --yes install git
       - checkout
       - run:
           name: Install Dependencies
