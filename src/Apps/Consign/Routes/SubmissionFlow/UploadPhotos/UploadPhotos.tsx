@@ -29,6 +29,7 @@ import {
   UploadPhotosFormModel,
 } from "./Components/UploadPhotosForm"
 import { compact } from "lodash"
+import { redirects_submission } from "__generated__/redirects_submission.graphql"
 
 const logger = createLogger("SubmissionFlow/UploadPhotos.tsx")
 
@@ -49,7 +50,7 @@ const getPhotoUrlFromAsset = (asset: SubmissionAsset) => {
   )
 }
 export const getUploadPhotosFormInitialValues = (
-  submission?: UploadPhotos_submission
+  submission?: UploadPhotos_submission | redirects_submission
 ): UploadPhotosFormModel => {
   return {
     photos:

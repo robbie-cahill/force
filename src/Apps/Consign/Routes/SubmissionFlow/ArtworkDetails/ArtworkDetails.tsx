@@ -139,6 +139,7 @@ export const ArtworkDetails: React.FC<ArtworkDetailsProps> = ({
       router.replace({
         pathname: `/sell/submission/${submissionId}/artwork-details`,
       })
+
       router.push({
         pathname: compact([
           `/sell/submission/${submissionId}/upload-photos`,
