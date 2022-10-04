@@ -268,45 +268,23 @@ workflows:
           <<: *not_main_or_staging_or_release
 
       # Main build
-      - hokusai/buildkit-build:
+      - hokusai/buildkit-build-push:
           <<: *not_staging_or_release
           context: hokusai
           executor: hokusai/beta
-          name: builder-image-build
-          pre-steps:
-            - run:
-                command: echo 'export BUILD_TARGET="builder";' >> $BASH_ENV
-
-      - hokusai/buildkit-push:
-          <<: *not_staging_or_release
-          context: hokusai
-          executor: hokusai/beta
-          name: builder-image-push
-          requires:
-            - builder-image-build
+          name: builder-image-build-push
           pre-steps:
             - run:
                 command: echo 'export BUILD_TARGET="builder";' >> $BASH_ENV
 
       # Electron Runner build
-      - hokusai/buildkit-build:
+      - hokusai/buildkit-build-push:
           <<: *not_staging_or_release
           context: hokusai
           executor: hokusai/beta
-          name: electron-runner-image-build
+          name: electron-runner-image-build-push
           requires:
-            - builder-image-build
-          pre-steps:
-            - run:
-                command: echo 'export BUILD_TARGET="electron-runner";' >> $BASH_ENV
-
-      - hokusai/buildkit-push:
-          <<: *not_staging_or_release
-          context: hokusai
-          executor: hokusai/beta
-          name: electron-runner-image-push
-          requires:
-            - electron-runner-image-build
+            - builder-image-build-push
           pre-steps:
             - run:
                 command: echo 'export BUILD_TARGET="electron-runner";' >> $BASH_ENV
@@ -316,52 +294,44 @@ workflows:
           <<: *not_staging_or_release
           context: hokusai
           requires:
-            - builder-image-push
+            - builder-image-build-push
 
       - type-check:
           <<: *not_staging_or_release
           context: hokusai
           requires:
-            - builder-image-push
+            - builder-image-build-push
 
       - check-pr:
           <<: *not_staging_or_release
           context: hokusai
           requires:
-            - builder-image-push
+            - builder-image-build-push
 
       - relay-check:
           <<: *not_staging_or_release
           context: hokusai
           requires:
-            - builder-image-push
+            - builder-image-build-push
 
       - acceptance:
           <<: *not_staging_or_release
           context: hokusai
           requires:
-            - electron-runner-image-push
+            - electron-runner-image-build-push
 
       # Staging
-      - hokusai/buildkit-build:
+      - hokusai/buildkit-build-push:
           <<: *only_main
           context: hokusai
           executor: hokusai/beta
-          name: production-image-build
+          name: production-image-build-push
           requires:
-            - builder-image-build
-
-      - hokusai/buildkit-push:
-          <<: *only_main
-          context: hokusai
-          executor: hokusai/beta
-          name: production-image-push
-          requires:
+            - builder-image-build-push
             - test
             - type-check
             - relay-check
             - acceptance
-            - production-image-build
 
       - hokusai/deploy-staging:
           <<: *only_main
@@ -369,7 +339,7 @@ workflows:
           project-name: force
           executor: hokusai/beta
           requires:
-            - production-image-push
+            - production-image-build-push
           post-steps:
             - slack/notify:
                 event: fail
