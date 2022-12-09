@@ -127,6 +127,7 @@ export const FairFollowedArtistsFragmentContainer = createFragmentContainer(
               ...ShelfArtwork_artwork
               internalID
               slug
+              artworkLocation
             }
           }
         }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4236ed51d83fba1a9ba6cbee56b6c84a>>
+ * @generated SignedSource<<46abf0fb1228ed7d294d3e3cdf01b619>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type FairFollowedArtists_fair$data = {
   readonly followedArtistArtworks: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly artworkLocation: string | null;
         readonly internalID: string;
         readonly slug: string;
         readonly " $fragmentSpreads": FragmentRefs<"ShelfArtwork_artwork">;
@@ -93,7 +94,14 @@ return {
                   "name": "ShelfArtwork_artwork"
                 },
                 (v0/*: any*/),
-                (v1/*: any*/)
+                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "artworkLocation",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             }
@@ -109,6 +117,6 @@ return {
 };
 })();
 
-(node as any).hash = "e6f2019d1199cc4b9c488adf91d25f8a";
+(node as any).hash = "ff245345dd89c72d62f2794d5e2de500";
 
 export default node;
