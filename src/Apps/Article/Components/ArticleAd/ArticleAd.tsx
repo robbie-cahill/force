@@ -5,6 +5,9 @@ import { AdUnit, AdSize } from "./types"
 import { useSizeAndPosition } from "Utils/Hooks/useSizeAndPosition"
 import { useArticleTracking } from "../../useArticleTracking"
 
+// trigger the console like so:
+// googletag.openConsole()
+
 export interface ArticleAdProps extends BoxProps {
   unit: AdUnit
   size: AdSize
@@ -42,7 +45,13 @@ export const ArticleAd: FC<ArticleAdProps> = memo(({ unit, size, ...rest }) => {
           <AdSlot
             adUnit={unit}
             sizes={[[width, height]]}
-            onSlotIsViewable={displayedAd}
+            onSlotRender={omg => {
+              console.log("!!! onSlotRender", omg)
+            }}
+            onSlotIsViewable={omg => {
+              console.log("!!! onSlotIsViewable", omg)
+              displayedAd()
+            }}
           />
         </Box>
       </ResponsiveBox>
@@ -50,6 +59,8 @@ export const ArticleAd: FC<ArticleAdProps> = memo(({ unit, size, ...rest }) => {
       <Text variant="xs" textAlign="center" mx="auto" mt={1} color="black30">
         Advertisement
       </Text>
+      <Text>unit: {unit}</Text>
+      <Text>size: {size}</Text>
     </Box>
   )
 })
