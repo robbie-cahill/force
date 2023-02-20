@@ -18,7 +18,7 @@ const reasons = [
         </Media>
       </>
     ),
-    title: "Net more from your sale",
+    title: "Earn more from your sale",
     text:
       "With lower fees than traditional auction houses and dealers, and no listing fees, you take home more of the final sale price.",
   },
@@ -56,7 +56,7 @@ const reasons = [
 
 export const Highlights: React.FC = () => {
   return (
-    <GridColumns gridColumnGap={[0, 4, 6]} alignItems="fex-start">
+    <GridColumns gridColumnGap={[0, 2, 4]} alignItems="fex-start">
       {reasons.map(i => (
         <RowItem icon={i.icon} title={i.title} text={i.text} />
       ))}
@@ -73,7 +73,7 @@ const RowItem: React.FC<RowItemProps> = ({ icon, title, text }) => {
   return (
     <Column span={4} mb={[2, 0]}>
       {icon}
-      <Text mt={[0.5, 2]} variant={["md", "lg", "xl"]}>
+      <Text mt={[0.5, 2]} variant={["md", "lg-display", "xl"]}>
         {title}
       </Text>
       <Text mt={[0.5, 1]} variant={["xs", "sm"]}>
