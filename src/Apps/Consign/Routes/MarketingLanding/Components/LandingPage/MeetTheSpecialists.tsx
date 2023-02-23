@@ -8,6 +8,10 @@ import {
   Image,
 } from "@artsy/palette"
 import {
+  CARD_HEIGHT,
+  CARD_HEIGHT_MD,
+  CARD_HEIGHT_MOBILE,
+  CARD_WIDTH,
   SPECIALISTS,
   Specialty,
 } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/SpecialistsData"
@@ -83,7 +87,7 @@ export const MeetTheSpecialists: React.FC = () => {
       <Flex overflowY="scroll">
         {pills.map(pill => (
           <Pill
-            mr={[1, 2]}
+            mr={1}
             hover={false}
             selected={selectedSpecialty === pill.type}
             variant="default"
@@ -112,10 +116,10 @@ export const MeetTheSpecialists: React.FC = () => {
         getItems={() => {
           return specialistsTooDisplay.map(i => (
             <ResponsiveBox
-              aspectWidth={445}
-              aspectHeight={644}
-              maxWidth={445}
-              minHeight={[461, 644]}
+              aspectWidth={CARD_WIDTH}
+              aspectHeight={CARD_HEIGHT}
+              maxWidth={CARD_WIDTH}
+              minHeight={[CARD_HEIGHT_MOBILE, CARD_HEIGHT_MD, CARD_HEIGHT]}
               backgroundColor="black60"
             >
               <Box
