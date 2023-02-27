@@ -4,10 +4,9 @@ import { Clickable, Message, Spacer, Text } from "@artsy/palette"
 import { createFragmentContainer, graphql } from "react-relay"
 import { NewForYouApp_viewer$data } from "__generated__/NewForYouApp_viewer.graphql"
 import { NewForYouArtworksGridFragmentContainer } from "Apps/NewForYou/Components/NewForYouArtworksGrid"
-import { useSystemContext } from "System"
+import { useSystemContext } from "System/useSystemContext"
 import { useAuthDialog } from "Components/AuthDialog"
 import { AuthContextModule, ContextModule } from "@artsy/cohesion"
-import { ModalType } from "Components/Authentication/Types"
 
 interface NewForYouAppProps {
   viewer: NewForYouApp_viewer$data
@@ -20,21 +19,14 @@ export const NewForYouApp: FC<NewForYouAppProps> = ({ viewer }) => {
 
   const handleClick = () => {
     showAuthDialog({
-      current: {
-        mode: "Login",
-        options: {
-          title: mode => {
-            const action = mode === "Login" ? "Log in" : "Sign up"
-            return `${action} to see your personalized recommendations`
-          },
-        },
-        analytics: {
-          contextModule: ContextModule.newWorksForYouRail as AuthContextModule,
+      mode: "Login",
+      options: {
+        title: mode => {
+          const action = mode === "Login" ? "Log in" : "Sign up"
+          return `${action} to see your personalized recommendations`
         },
       },
-      legacy: {
-        mode: ModalType.login,
-        copy: "Log in to see your personalized recommendations",
+      analytics: {
         contextModule: ContextModule.newWorksForYouRail as AuthContextModule,
       },
     })

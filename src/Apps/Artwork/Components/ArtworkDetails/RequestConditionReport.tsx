@@ -3,7 +3,7 @@ import { Button, ModalDialog, Text, useToasts } from "@artsy/palette"
 import { useState } from "react"
 import * as React from "react"
 import { commitMutation, createFragmentContainer, graphql } from "react-relay"
-import { useSystemContext } from "System"
+import { useSystemContext } from "System/useSystemContext"
 import { SystemQueryRenderer } from "System/Relay/SystemQueryRenderer"
 import createLogger from "Utils/logger"
 import { ContextModule, Intent } from "@artsy/cohesion"
@@ -14,7 +14,6 @@ import {
   RequestConditionReportMutation$data,
 } from "__generated__/RequestConditionReportMutation.graphql"
 import { RequestConditionReportQuery } from "__generated__/RequestConditionReportQuery.graphql"
-import { ModalType } from "Components/Authentication/Types"
 import track, { useTracking } from "react-tracking"
 import { useAuthDialog } from "Components/AuthDialog"
 
@@ -83,16 +82,8 @@ export const RequestConditionReport: React.FC<RequestConditionReportProps> = pro
 
   const handleLoginClick = () => {
     showAuthDialog({
-      current: {
-        mode: "Login",
-        analytics: {
-          contextModule: ContextModule.aboutTheWork,
-          intent: Intent.requestConditionReport,
-        },
-      },
-      legacy: {
-        mode: ModalType.login,
-        redirectTo: location.href,
+      mode: "Login",
+      analytics: {
         contextModule: ContextModule.aboutTheWork,
         intent: Intent.requestConditionReport,
       },

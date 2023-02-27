@@ -15,7 +15,6 @@ import {
   updateUrl,
 } from "Components/ArtworkFilter/Utils/urlBuilder"
 import { useAuthDialog } from "Components/AuthDialog"
-import { ModalType } from "Components/Authentication/Types"
 import { LoadingArea } from "Components/LoadingArea"
 import { PaginationFragmentContainer as Pagination } from "Components/Pagination"
 import { isEqual } from "lodash"
@@ -24,7 +23,7 @@ import { useContext, useState } from "react"
 import { Title } from "react-head"
 import { createRefetchContainer, graphql, RelayRefetchProp } from "react-relay"
 import { useTracking } from "react-tracking"
-import { SystemContext, useSystemContext } from "System"
+import { SystemContext, useSystemContext } from "System/SystemContext"
 import { useRouter } from "System/Router/useRouter"
 import { useFeatureFlag } from "System/useFeatureFlag"
 import useDeepCompareEffect from "use-deep-compare-effect"
@@ -150,24 +149,16 @@ const AuctionResultsContainer: React.FC<AuctionResultsProps> = ({
         // If user is not logged-in, show auth modal, but only if it was never shown before.
         if (!user && !authShownForFiltering) {
           showAuthDialog({
-            current: {
-              mode: "SignUp",
-              options: {
-                title: mode => {
-                  const action = mode === "SignUp" ? "Sign up" : "Log in"
-                  return `${action} to see auction results for ${artistName}`
-                },
-              },
-              analytics: {
-                contextModule: ContextModule.auctionResults,
-                intent: Intent.viewAuctionResults,
+            mode: "SignUp",
+            options: {
+              title: mode => {
+                const action = mode === "SignUp" ? "Sign up" : "Log in"
+                return `${action} to see auction results for ${artistName}`
               },
             },
-            legacy: {
+            analytics: {
               contextModule: ContextModule.auctionResults,
-              copy: `Sign up to see auction results for ${artistName}`,
               intent: Intent.viewAuctionResults,
-              mode: ModalType.signup,
             },
           })
 
@@ -527,9 +518,3 @@ export const ArtistAuctionResultsRefetchContainer = createRefetchContainer(
     }
   `
 )
-
-export enum AuctionResultsState {
-  PAST = "PAST",
-  UPCOMING = "UPCOMING",
-  ALL = "ALL",
-}

@@ -9,7 +9,7 @@ import {
   Spacer,
   Text,
 } from "@artsy/palette"
-import { useSystemContext } from "System"
+import { useSystemContext } from "System/useSystemContext"
 import { RouterLink } from "System/Router/RouterLink"
 import { Shipping_order$data } from "__generated__/Shipping_order.graphql"
 import { CommerceOrderFulfillmentTypeEnum } from "__generated__/SetShippingMutation.graphql"
@@ -531,6 +531,14 @@ export const ShippingRoute: FC<ShippingProps> = props => {
     }
   }
 
+  const isSaveAndContinueAllowed = (): boolean => {
+    if (shippingOption === "PICKUP") {
+      return !phoneNumber || !!phoneNumberError
+    }
+
+    return false
+  }
+
   const renderArtaErrorMessage = () => {
     return (
       <Text
@@ -715,6 +723,7 @@ export const ShippingRoute: FC<ShippingProps> = props => {
                 loading={isCommittingMutation}
                 variant="primaryBlack"
                 width="50%"
+                disabled={isSaveAndContinueAllowed()}
               >
                 Save and Continue
               </Button>
@@ -741,6 +750,7 @@ export const ShippingRoute: FC<ShippingProps> = props => {
                 loading={isCommittingMutation}
                 variant="primaryBlack"
                 width="100%"
+                disabled={isSaveAndContinueAllowed()}
               >
                 Save and Continue
               </Button>

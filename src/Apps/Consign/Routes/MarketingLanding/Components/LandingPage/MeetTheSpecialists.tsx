@@ -15,11 +15,13 @@ import {
   SPECIALISTS,
   Specialty,
 } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/SpecialistsData"
-import { Rail } from "Components/Rail"
+import { Rail } from "Components/Rail/Rail"
 import { useState } from "react"
 import { useTracking } from "react-tracking"
 import { RouterLink } from "System/Router/RouterLink"
-import { useAnalyticsContext, useSystemContext } from "System"
+import { useAnalyticsContext } from "System/Analytics/AnalyticsContext"
+import { useSystemContext } from "System/SystemContext"
+import { useFeatureFlag } from "System/useFeatureFlag"
 
 interface PillData {
   type: Specialty
@@ -45,6 +47,7 @@ export const MeetTheSpecialists: React.FC = () => {
   const { user } = useSystemContext()
   const { contextPageOwnerType } = useAnalyticsContext()
   const { trackEvent } = useTracking()
+  const enableSWAInquiryFlow = useFeatureFlag("swa-inquiry-flow")
 
   const [selectedSpecialty, setSelectedSpecialty] = useState<Specialty>(
     "auctions"
@@ -52,6 +55,10 @@ export const MeetTheSpecialists: React.FC = () => {
   const [specialistsTooDisplay, setSpecialistsTooDisplay] = useState(
     SPECIALISTS.filter(i => i.specialty === "auctions")
   )
+
+  const getInTouchRoute = enableSWAInquiryFlow
+    ? "/sell/inquiry"
+    : "mailto:sell@artsy.net?subject=Inquiry about selling with Artsy"
 
   const trackContactTheSpecialistClick = () => {
     trackEvent({
@@ -64,14 +71,14 @@ export const MeetTheSpecialists: React.FC = () => {
     })
   }
 
-  const trackStartSellingClick = () => {
+  const trackGetInTouchClick = () => {
     trackEvent({
-      action: "clickedStartSelling",
+      action: "clickedGetInTouch",
       context_module: "MeetTheSpecialists",
       context_page_owner_type: contextPageOwnerType,
-      label: "Start Selling",
-      destination_path: "/sell/submission",
+      label: "Get in Touch",
       user_id: user?.id,
+      user_email: user?.email,
     })
   }
 
@@ -177,11 +184,11 @@ export const MeetTheSpecialists: React.FC = () => {
         // @ts-ignore
         as={RouterLink}
         variant="primaryBlack"
-        onClick={trackStartSellingClick}
-        data-testid="start-selling-button"
-        to="/sell/submission"
+        onClick={trackGetInTouchClick}
+        data-testid="get-in-touch-button"
+        to={getInTouchRoute}
       >
-        Start Selling
+        Get in Touch
       </Button>
     </>
   )

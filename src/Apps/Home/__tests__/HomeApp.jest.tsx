@@ -1,5 +1,5 @@
 import { graphql } from "react-relay"
-import { MockBoot } from "DevTools"
+import { MockBoot } from "DevTools/MockBoot"
 import { setupTestWrapper } from "DevTools/setupTestWrapper"
 import { HomeAppFragmentContainer } from "Apps/Home/HomeApp"
 import { HomeApp_Test_Query } from "__generated__/HomeApp_Test_Query.graphql"
@@ -44,7 +44,6 @@ describe("HomeApp", () => {
   describe.skip("logged out", () => {
     beforeAll(() => {
       mockuseSystemContext.mockImplementation(() => ({
-        mediator: { on: jest.fn() },
         isLoggedIn: false,
       }))
     })
@@ -77,7 +76,6 @@ describe("HomeApp", () => {
   describe("logged in", () => {
     beforeAll(() => {
       mockuseSystemContext.mockImplementation(() => ({
-        mediator: { on: jest.fn() },
         isLoggedIn: true,
       }))
     })

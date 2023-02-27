@@ -1,11 +1,10 @@
-import { SystemContextProvider } from "System"
+import { SystemContextProvider } from "System/SystemContext"
 import { useTracking } from "react-tracking"
 import { mount } from "enzyme"
 import {
   StickyFooterWithInquiry,
   StickyFooter,
 } from "Apps/Order/Components/StickyFooter"
-import { mediator } from "Server/mediator"
 
 jest.mock("react-tracking")
 
@@ -13,8 +12,6 @@ const trackEvent = jest.fn()
 
 describe("Sticky footer", () => {
   beforeEach(() => {
-    jest.spyOn(mediator, "trigger")
-
     const mockTracking = useTracking as jest.Mock
     mockTracking.mockImplementation(() => {
       return {

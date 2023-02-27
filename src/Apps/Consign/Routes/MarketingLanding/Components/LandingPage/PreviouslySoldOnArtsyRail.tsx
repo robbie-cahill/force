@@ -2,7 +2,7 @@ import { ContextModule, OwnerType } from "@artsy/cohesion"
 import { Box, Flex, Skeleton, SkeletonBox, Text } from "@artsy/palette"
 import { shuffle } from "lodash"
 import { createFragmentContainer, graphql } from "react-relay"
-import { Rail } from "Components/Rail"
+import { Rail } from "Components/Rail/Rail"
 import { useTracking } from "react-tracking"
 import { SystemQueryRenderer } from "System/Relay/SystemQueryRenderer"
 import { trackHelpers } from "Utils/cohesionHelpers"
@@ -81,7 +81,7 @@ export const PreviouslySoldOnArtsyRail: React.FC<PreviouslySoldOnArtsyRailProps>
                       color="green100"
                       overflowEllipsis
                     >
-                      {performance?.mid}
+                      +{performance?.mid}
                     </Text>
                   </Flex>
 

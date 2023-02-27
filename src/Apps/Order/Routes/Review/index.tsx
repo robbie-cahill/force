@@ -30,7 +30,7 @@ import { OfferSummaryItemFragmentContainer as OfferSummaryItem } from "Apps/Orde
 import { BuyerGuarantee } from "Apps/Order/Components/BuyerGuarantee"
 import { createStripeWrapper } from "Utils/createStripeWrapper"
 import type { Stripe, StripeElements } from "@stripe/stripe-js"
-import { SystemContextProps, withSystemContext } from "System"
+import { SystemContextProps, withSystemContext } from "System/SystemContext"
 import { ShippingArtaSummaryItemFragmentContainer } from "Apps/Order/Components/ShippingArtaSummaryItem"
 import { ActionType, ContextModule, OwnerType } from "@artsy/cohesion"
 import { extractNodes } from "Utils/extractNodes"
@@ -132,7 +132,9 @@ export const ReviewRoute: FC<ReviewProps> = props => {
         // TODO: replace usage with order.state === "IN_REVIEW" once buyerStatus
         // is implemented in Exchange.
         // See https://www.notion.so/artsy/2023-02-09-Platform-Practice-Meeting-Notes-87f4cc9987a7436c9c4b207847e318db?pvs=4
-        const orderInReviewFacsimile = order.paymentMethod === "WIRE_TRANSFER"
+        const orderInReviewFacsimile =
+          order.paymentMethod === "WIRE_TRANSFER" &&
+          order.source === "artwork_page"
 
         if (isEigen) {
           if (order.mode === "OFFER") {

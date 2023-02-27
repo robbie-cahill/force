@@ -1,11 +1,11 @@
 import { ActionType } from "@artsy/cohesion"
 import { fireEvent, screen, waitFor } from "@testing-library/react"
 import { PriceEstimateContactInformationFragmentContainer } from "Apps/MyCollection/Routes/PriceEstimate/PriceEstimateContactInformation"
-import { MockBoot } from "DevTools"
+import { MockBoot } from "DevTools/MockBoot"
 import { setupTestWrapperTL } from "DevTools/setupTestWrapper"
 import { graphql } from "react-relay"
 import { useTracking } from "react-tracking"
-import { SystemContextProvider, useSystemContext } from "System"
+import { SystemContextProvider, useSystemContext } from "System/SystemContext"
 
 jest.unmock("react-relay")
 jest.mock("react-tracking")

@@ -1,5 +1,5 @@
 import { orderRoutes } from "Apps/Order/orderRoutes"
-import { SystemContextProvider } from "System"
+import { SystemContextProvider } from "System/SystemContext"
 import { ErrorPage } from "Components/ErrorPage"
 import { mount } from "enzyme"
 import { Resolver } from "found-relay"
@@ -19,7 +19,7 @@ import {
   UntouchedBuyOrderWithShippingQuotes,
   UntouchedOfferOrder,
 } from "Apps/__tests__/Fixtures/Order"
-import { MockBoot } from "DevTools"
+import { MockBoot } from "DevTools/MockBoot"
 import { FarceRedirectResult } from "found/server"
 import { DateTime } from "luxon"
 // eslint-disable-next-line no-restricted-imports

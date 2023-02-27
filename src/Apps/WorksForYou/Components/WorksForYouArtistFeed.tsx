@@ -5,8 +5,8 @@ import {
   graphql,
   RelayPaginationProp,
 } from "react-relay"
-import ArtworkGrid from "Components/ArtworkGrid"
-import { useSystemContext } from "System"
+import ArtworkGrid from "Components/ArtworkGrid/ArtworkGrid"
+import { useSystemContext } from "System/useSystemContext"
 import { WorksForYouArtistFeed_viewer$data } from "__generated__/WorksForYouArtistFeed_viewer.graphql"
 
 interface WorksForYouArtistFeedProps {

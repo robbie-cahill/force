@@ -21,6 +21,7 @@
     "compile": "babel src --out-dir dist -s --source-map --extensions '.js,.jsx,.ts,.tsx' --ignore src/**/__tests__",
     "cypress:run": "./node_modules/.bin/cypress run",
     "cypress": "./node_modules/.bin/cypress open",
+    "dead-code": "./scripts/check-dead-code.sh",
     "delete-review-app": "kubectl --context staging delete namespace",
     "detect-secrets:hook": "scripts/detect-secrets.sh hook",
     "detect-secrets:rebuild": "scripts/detect-secrets.sh rebuild",
@@ -72,7 +73,7 @@
     "superagent": "3.8.3"
   },
   "dependencies": {
-    "@artsy/cohesion": "4.102.0",
+    "@artsy/cohesion": "4.106.0",
     "@artsy/commerce_helpers": "artsy/commerce_helpers",
     "@artsy/detect-responsive-traits": "^0.1.0",
     "@artsy/eigen-web-association": "^1.5.3",
@@ -81,8 +82,8 @@
     "@artsy/icons": "3.2.1",
     "@artsy/img": "1.0.3",
     "@artsy/multienv": "^1.2.0",
-    "@artsy/palette": "29.5.0",
-    "@artsy/palette-charts": "28.5.0",
+    "@artsy/palette": "29.6.0",
+    "@artsy/palette-charts": "28.6.0",
     "@artsy/react-html-parser": "^3.0.2",
     "@artsy/to-title-case": "^1.1.0",
     "@artsy/xapp": "1.0.6",

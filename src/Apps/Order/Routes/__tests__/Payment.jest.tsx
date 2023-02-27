@@ -8,18 +8,19 @@ import {
 } from "Apps/__tests__/Fixtures/Order"
 import { AddressForm } from "Components/AddressForm"
 import { graphql } from "react-relay"
-import { settingOrderPaymentFailed } from "Apps/Order/Routes/__fixtures__/MutationResults"
 import { PaymentFragmentContainer } from "Apps/Order/Routes/Payment"
 import { OrderAppTestPage } from "./Utils/OrderAppTestPage"
-import { useSystemContext } from "System"
+import { useSystemContext } from "System/useSystemContext"
 import { useTracking } from "react-tracking"
 import { CreditCardPickerFragmentContainer } from "Apps/Order/Components/CreditCardPicker"
 import { useSetPayment } from "Apps/Order/Mutations/useSetPayment"
 import { CommercePaymentMethodEnum } from "__generated__/Payment_order.graphql"
-import { flushPromiseQueue, MockBoot } from "DevTools"
+import { MockBoot } from "DevTools/MockBoot"
+import { flushPromiseQueue } from "DevTools/flushPromiseQueue"
 import { setupTestWrapper } from "DevTools/setupTestWrapper"
 import { BankAccountPickerFragmentContainer } from "Apps/Order/Components/BankAccountPicker"
 import { useOrderPaymentContext } from "Apps/Order/Routes/Payment/PaymentContext/OrderPaymentContext"
+import { settingOrderPaymentFailed } from "Apps/Order/Routes/__fixtures__/MutationResults/setOrderPayment"
 
 jest.unmock("react-tracking")
 jest.unmock("react-relay")
@@ -159,14 +160,7 @@ describe("Payment", () => {
 
   beforeAll(() => {
     ;(useSystemContext as jest.Mock).mockImplementation(() => {
-      return {
-        mediator: {
-          on: jest.fn(),
-          off: jest.fn(),
-          ready: jest.fn(),
-          trigger: jest.fn(),
-        },
-      }
+      return {}
     })
   })
 
