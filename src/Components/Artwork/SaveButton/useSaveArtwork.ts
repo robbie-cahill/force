@@ -7,7 +7,6 @@ type Artwork = {
   internalID: string
   id: string | null
   slug: string | null
-  title: string | null
 }
 
 interface UseSaveArtwork {
@@ -40,11 +39,26 @@ export const useSaveArtwork = ({
                 slug: artwork.slug!,
                 is_saved: !isSaved,
               },
+              /**
+               * TODO: We don't _really_ need an optimistic response and
+               * it's too painful to alter all the consumers of this to pass
+               * in the `me` object.
+               *
+               * This hook shouldn't have to accept a stub `artwork` object either.
+               * Given just the artwork `id` we could fetch everything else.
+               */
+              me: {
+                id: "me",
+                counts: {
+                  savedArtworks: 0,
+                },
+              },
             },
           }
         )
 
         onSave?.({
+          // TODO: Pass "saved" or "removed" value
           action: !!saveArtwork?.artwork?.is_saved
             ? "Saved Artwork"
             : "Removed Artwork",

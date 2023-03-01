@@ -7341,7 +7341,7 @@ input CreateOrderedSetMutationInput {
   itemIds: [String]
   itemType: String!
   key: String!
-  layout: String
+  layout: OrderedSetLayouts
   name: String
   ownerType: String
   published: Boolean
@@ -11270,6 +11270,14 @@ type Me implements Node {
     first: Int
     last: Int
     page: Int
+  ): ArtworkConnection
+
+  # A list of artworks from galleries the user follows.
+  newWorksFromGalleriesYouFollowConnection(
+    after: String
+    before: String
+    first: Int
+    last: Int
   ): ArtworkConnection
   orders(
     after: String
@@ -17440,11 +17448,12 @@ input UpdateOrderedSetMutationInput {
   itemIds: [String]
   itemType: String
   key: String
-  layout: String
+  layout: OrderedSetLayouts
   name: String
   ownerId: String
   ownerType: String
   published: Boolean
+  unsetOwner: Boolean
 }
 
 type UpdateOrderedSetMutationPayload {

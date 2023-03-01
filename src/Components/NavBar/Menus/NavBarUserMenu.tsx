@@ -21,6 +21,8 @@ import { logout } from "Utils/auth"
 import { getENV } from "Utils/getENV"
 import { userIsAdmin } from "Utils/user"
 import { NavBarMenuItemButton, NavBarMenuItemLink } from "./NavBarMenuItem"
+import { ProgressiveOnboardingFollowsHighlight } from "Components/ProgressiveOnboarding/ProgressiveOnboardingFollowsHighlight"
+import { ProgressiveOnboardingSavesHighlight } from "Components/ProgressiveOnboarding/ProgressiveOnboardingSavesHighlight"
 
 export const NavBarUserMenu: React.FC = () => {
   const isCollectorProfileEnabled = useFeatureFlag("cx-collector-profile")
@@ -102,13 +104,17 @@ export const NavBarUserMenu: React.FC = () => {
           </NavBarMenuItemLink>
 
           {!isSeparateSavesAndFollowsEnabled ? (
-            <NavBarMenuItemLink
-              aria-label="View your Saves &amp; Follows"
-              to="/collector-profile/saves"
-              onClick={trackClick}
-            >
-              <HeartIcon mr={1} aria-hidden="true" /> Saves &amp; Follows
-            </NavBarMenuItemLink>
+            <ProgressiveOnboardingSavesHighlight>
+              <ProgressiveOnboardingFollowsHighlight>
+                <NavBarMenuItemLink
+                  aria-label="View your Saves &amp; Follows"
+                  to="/collector-profile/saves"
+                  onClick={trackClick}
+                >
+                  <HeartIcon mr={1} aria-hidden="true" /> Saves &amp; Follows
+                </NavBarMenuItemLink>
+              </ProgressiveOnboardingFollowsHighlight>
+            </ProgressiveOnboardingSavesHighlight>
           ) : (
             <>
               <NavBarMenuItemLink

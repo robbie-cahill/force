@@ -2,7 +2,13 @@ import { useContext } from "react"
 import * as React from "react"
 import { NavBarUserMenu } from "./Menus"
 import { SystemContext } from "System/SystemContext"
-import { BellIcon, Dropdown, EnvelopeIcon, SoloIcon } from "@artsy/palette"
+import {
+  BellIcon,
+  Dropdown,
+  EnvelopeIcon,
+  Flex,
+  SoloIcon,
+} from "@artsy/palette"
 import { graphql } from "react-relay"
 import { SystemQueryRenderer } from "System/Relay/SystemQueryRenderer"
 import {
@@ -16,6 +22,8 @@ import { NavBarNewNotifications } from "./Menus/NavBarNewNotifications"
 import { NavBarNotificationIndicator } from "./NavBarNotificationIndicator"
 import { useTracking } from "react-tracking"
 import { ActionType } from "@artsy/cohesion"
+import { ProgressiveOnboardingFindFollows } from "Components/ProgressiveOnboarding/ProgressiveOnboardingFindFollows"
+import { ProgressiveOnboardingFindSaves } from "Components/ProgressiveOnboarding/ProgressiveOnboardingFindSaves"
 
 /** Displays action icons for logged in users such as inbox, profile, and notifications */
 export const NavBarLoggedInActions: React.FC<Partial<
@@ -101,15 +109,20 @@ export const NavBarLoggedInActions: React.FC<Partial<
         openDropdownByClick
       >
         {({ anchorRef, anchorProps, visible }) => (
-          <NavBarItemButton
-            ref={anchorRef as any}
-            px={0}
-            pl={1}
-            active={visible}
-            {...anchorProps}
-          >
-            <SoloIcon title="Your account" fill="currentColor" />
-          </NavBarItemButton>
+          // Offset to accomodate hit area padding on right side of icon
+          <Flex mr={-1}>
+            <ProgressiveOnboardingFindSaves>
+              <ProgressiveOnboardingFindFollows>
+                <NavBarItemButton
+                  ref={anchorRef as any}
+                  active={visible}
+                  {...anchorProps}
+                >
+                  <SoloIcon title="Your account" fill="currentColor" />
+                </NavBarItemButton>
+              </ProgressiveOnboardingFindFollows>
+            </ProgressiveOnboardingFindSaves>
+          </Flex>
         )}
       </Dropdown>
     </>
