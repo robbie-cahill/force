@@ -1,11 +1,12 @@
+import { ActionType, ContextModule } from "@artsy/cohesion"
 import {
   Box,
   Button,
   Flex,
+  Image,
   Pill,
   ResponsiveBox,
   Text,
-  Image,
 } from "@artsy/palette"
 import {
   CARD_HEIGHT,
@@ -16,14 +17,11 @@ import {
   Specialty,
 } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/SpecialistsData"
 import { Rail } from "Components/Rail/Rail"
+import { useAnalyticsContext } from "System/Analytics/AnalyticsContext"
+import { RouterLink } from "System/Router/RouterLink"
+import { useSystemContext } from "System/SystemContext"
 import { useState } from "react"
 import { useTracking } from "react-tracking"
-import { RouterLink } from "System/Router/RouterLink"
-import { useAnalyticsContext } from "System/Analytics/AnalyticsContext"
-import { useSystemContext } from "System/SystemContext"
-import { useFeatureFlag } from "System/useFeatureFlag"
-import { useRouter } from "System/Router/useRouter"
-import { ActionType, ContextModule } from "@artsy/cohesion"
 
 interface PillData {
   type: Specialty
@@ -47,10 +45,8 @@ const pills: PillData[] = [
 
 export const MeetTheSpecialists: React.FC = () => {
   const { user } = useSystemContext()
-  const { router } = useRouter()
   const { contextPageOwnerType } = useAnalyticsContext()
   const { trackEvent } = useTracking()
-  const enableSWAInquiryFlow = useFeatureFlag("swa-inquiry-flow")
 
   const [selectedSpecialty, setSelectedSpecialty] = useState<Specialty>(
     "auctions"
@@ -59,9 +55,7 @@ export const MeetTheSpecialists: React.FC = () => {
     SPECIALISTS.filter(i => i.specialty === "auctions")
   )
 
-  const getInTouchRoute = enableSWAInquiryFlow
-    ? "/sell/inquiry"
-    : "mailto:sell@artsy.net?subject=Inquiry about selling with Artsy"
+  const getInTouchRoute = "/sell/inquiry"
 
   const trackContactTheSpecialistClick = () => {
     trackEvent({
@@ -85,8 +79,7 @@ export const MeetTheSpecialists: React.FC = () => {
     })
   }
 
-  const clickContactSpecialist = email => {
-    router.push(`/sell/inquiry/${email}`)
+  const clickContactSpecialist = () => {
     trackContactTheSpecialistClick()
   }
   return (
@@ -95,8 +88,7 @@ export const MeetTheSpecialists: React.FC = () => {
         Meet the specialists
       </Text>
       <Text mb={2} variant={["xs", "sm"]}>
-        Our in-house experts cover Post-War and Contemporary Art, Prints and
-        Multiples, Street Art and Photographs.
+        Our specialists span today’s most popular collecting categories.
       </Text>
       <Flex overflowY="scroll">
         {pills.map(pill => (
@@ -165,11 +157,14 @@ export const MeetTheSpecialists: React.FC = () => {
                     {i.bio}
                   </Text>
                   <Button
+                    // @ts-ignore
+                    as={RouterLink}
                     variant="secondaryWhite"
                     size="small"
                     mb={2}
-                    onClick={() => clickContactSpecialist(i.email)}
+                    onClick={clickContactSpecialist}
                     data-testid={`get-in-touch-button-${i.firstName}`}
+                    to={`/sell/inquiry/${i.email}`}
                   >
                     Contact {i.firstName}
                   </Button>
@@ -181,8 +176,8 @@ export const MeetTheSpecialists: React.FC = () => {
         showProgress={false}
       />
       <Text mb={[2, 4]} variant={["md", "lg-display"]}>
-        Not sure which of our experts is the right fit for your work? Get in
-        touch and we'll connect you.
+        Not sure who’s the right fit for your collection? Get in touch and we’ll
+        connect you.
       </Text>
       <Button
         width={["100%", 300]}

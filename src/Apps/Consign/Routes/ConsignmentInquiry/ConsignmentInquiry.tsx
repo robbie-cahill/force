@@ -69,9 +69,7 @@ export const ConsignmentInquiry: React.FC<ConsignmentInquiryProps> = ({
   const handleRecaptcha = (action: RecaptchaAction) =>
     new Promise(resolve => recaptcha(action, resolve))
 
-  const recipientEmail = match.params.recipientEmail
-    ? match.params.recipientEmail
-    : null
+  const recipientEmail = match.params.recipientEmail ?? null
 
   const recipientName = SPECIALISTS.find(i => i.email === recipientEmail)
     ?.firstName

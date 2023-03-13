@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next"
 import { SelectListsForArtworkContent } from "Apps/CollectorProfile/Routes/Saves2/Components/SelectListsForArtworkModal/SelectListsForArtworkContent"
 import {
   ListKey,
+  OnSaveResultData,
+  ResultListEntity,
   useManageArtworkForSavesContext,
 } from "Components/Artwork/ManageArtworkForSaves"
 
@@ -22,6 +24,8 @@ const logger = createLogger("SelectListsForArtworkModal")
 export interface SelectListsForArtworkModalProps {
   me: SelectListsForArtworkModal_me$data | null
 }
+
+type CollectionsById = Record<string, ResultListEntity>
 
 export const SelectListsForArtworkModal: React.FC<SelectListsForArtworkModalProps> = ({
   me,
@@ -40,11 +44,46 @@ export const SelectListsForArtworkModal: React.FC<SelectListsForArtworkModalProp
   const hasChanges =
     state.addingListIDs.length !== 0 || state.removingListIDs.length !== 0
 
-  const { submitMutation } = useUpdateCollectionsForArtwork()
+  const { submitMutation } = useUpdateCollectionsForArtwork(state.artwork!.id)
   const { sendToast } = useToasts()
 
   const onClose = () => {
     reset()
+  }
+
+  const getCollectionsById = () => {
+    const collectionsById: CollectionsById = {}
+
+    collections.forEach(collection => {
+      collectionsById[collection.internalID] = {
+        id: collection.internalID,
+        name: collection.name,
+      }
+    })
+
+    return collectionsById
+  }
+
+  const getOnSaveResult = (): OnSaveResultData => {
+    const collectionsById = getCollectionsById()
+    const selectedLists = getResultEntitiesByIds(
+      selectedCollectionIds,
+      collectionsById
+    )
+    const addedLists = getResultEntitiesByIds(
+      state.addingListIDs,
+      collectionsById
+    )
+    const removedLists = getResultEntitiesByIds(
+      state.removingListIDs,
+      collectionsById
+    )
+
+    return {
+      selectedLists,
+      addedLists,
+      removedLists,
+    }
   }
 
   const handleItemPress = (item: typeof collections[0]) => {
@@ -66,7 +105,7 @@ export const SelectListsForArtworkModal: React.FC<SelectListsForArtworkModalProp
       await submitMutation({
         variables: {
           input: {
-            artworkIDs: [state.artwork!.id],
+            artworkIDs: [state.artwork!.internalID],
             addToCollectionIDs: state.addingListIDs,
             removeFromCollectionIDs: state.removingListIDs,
           },
@@ -79,7 +118,8 @@ export const SelectListsForArtworkModal: React.FC<SelectListsForArtworkModalProp
         },
       })
 
-      onSave(selectedCollectionIds)
+      const result = getOnSaveResult()
+      onSave(result)
     } catch (error) {
       logger.error(error)
 
@@ -161,6 +201,7 @@ export const SelectListsForArtworkModalFragmentContainer = createFragmentContain
         defaultSaves: collection(id: "saved-artwork") {
           internalID
           isSavedArtwork(artworkID: $artworkID)
+          name
           ...SelectListItem_item
         }
 
@@ -174,6 +215,7 @@ export const SelectListsForArtworkModalFragmentContainer = createFragmentContain
             node {
               internalID
               isSavedArtwork(artworkID: $artworkID)
+              name
               ...SelectListItem_item
             }
           }
@@ -189,7 +231,7 @@ export const SelectListsForArtworkModalQueryRender: FC = () => {
   return (
     <SystemQueryRenderer<SelectListsForArtworkModalQuery>
       query={query}
-      variables={{ artworkID: state.artwork!.id }}
+      variables={{ artworkID: state.artwork!.internalID }}
       render={({ props, error }) => {
         if (error) {
           console.error(error)
@@ -211,3 +253,10 @@ const query = graphql`
     }
   }
 `
+
+const getResultEntitiesByIds = (
+  ids: string[],
+  collectionsById: CollectionsById
+) => {
+  return ids.map(id => collectionsById[id])
+}
