@@ -1,7 +1,7 @@
 import { Column, GridColumns, Text } from "@artsy/palette"
 import { DollarCircleIcon } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/DollarCircleIcon"
-import { StarCircleIcon } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/StarCircleIcon"
 import { GlobeNetworkCircleIcon } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/GlobeNetworkCircleIcon"
+import { StarCircleIcon } from "Apps/Consign/Routes/MarketingLanding/Components/LandingPage/StarCircleIcon"
 
 import { ReactElement } from "react"
 import { Media } from "Utils/Responsive"
