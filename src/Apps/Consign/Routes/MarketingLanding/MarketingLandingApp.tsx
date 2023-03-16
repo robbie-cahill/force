@@ -60,8 +60,10 @@ export const MarketingLandingApp = () => {
           <WaysWeSell />
           <HowItWorksSteps />
           <SpeakToTheTeam />
+          {/* <MeetTheSpecialists /> */}
           <CollectorsOverview />
           <PreviouslySoldOnArtsyRailQueryRenderer />
+          {/* <Reviews /> */}
           <FAQSWA />
           <Footer />
           <FooterBanner />
