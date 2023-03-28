@@ -27,8 +27,7 @@ export const Footer: React.FC = () => {
     <>
       <Box px={[2, 4, 12]} mb={[4, 6, 6]}>
         <Text variant={["lg-display", "xl", "xxl"]} pr={0} textAlign="center">
-          Meet your new advisor.{" "}
-          <Text display={["inline", "none"]}>{"\n"}</Text>
+          Meet your new advisor. <Text display={["block", "none"]}>{"\n"}</Text>
           It’s Artsy.
         </Text>
       </Box>
