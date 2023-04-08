@@ -1,3 +1,5 @@
+"use client"
+
 import { LayoutBlank } from "Apps/Components/Layouts/LayoutBlank"
 import { LayoutContainerOnly } from "Apps/Components/Layouts/LayoutContainerOnly"
 import { LayoutDefault } from "Apps/Components/Layouts/LayoutDefault"

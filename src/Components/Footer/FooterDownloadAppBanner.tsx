@@ -17,7 +17,7 @@ export const FooterDownloadAppBanner = () => {
 
   const isNewFooterEnabled = useFeatureFlag("grow_universal-footer")
 
-  if (IGNORE_PATHS.includes(match.location.pathname)) {
+  if (IGNORE_PATHS.includes(match?.location?.pathname)) {
     return null
   }
 
