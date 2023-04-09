@@ -26,7 +26,7 @@ import {
 import { AnalyticsContext } from "System/Analytics/AnalyticsContext"
 import { ClientContext } from "System/Router/buildClientAppContext"
 import { SiftContainer } from "Utils/SiftContainer"
-import { setupSentryClient } from "Server/setupSentryClient"
+// import { setupSentryClient } from "Server/setupSentryClient"
 import "System/i18n/i18n"
 import track from "react-tracking"
 import { StickyProvider } from "Components/Sticky"
@@ -57,7 +57,7 @@ export const Boot = track(undefined, {
     document.body.setAttribute("data-test", "AppReady") //
 
     if (getENV("NODE_ENV") === "production") {
-      setupSentryClient(sd)
+      // setupSentryClient(sd)
     }
   }, [])
 
@@ -81,30 +81,30 @@ export const Boot = track(undefined, {
       <HeadProvider headTags={headTags}>
         <StateProvider>
           <SystemContextProvider {...contextProps}>
-            <AnalyticsContext.Provider value={context?.analytics}>
-              <ErrorBoundary>
-                <MediaContextProvider onlyMatch={onlyMatchMediaQueries}>
-                  <ResponsiveProvider
-                    mediaQueries={themeProps.mediaQueries}
-                    initialMatchingMediaQueries={onlyMatchMediaQueries as any}
-                  >
-                    <ToastsProvider>
-                      <StickyProvider>
-                        <AuthIntentProvider>
-                          <AuthDialogProvider>
-                            <ProgressiveOnboardingProvider>
-                              <FocusVisible />
-                              <SiftContainer />
-                              {children}
-                            </ProgressiveOnboardingProvider>
-                          </AuthDialogProvider>
-                        </AuthIntentProvider>
-                      </StickyProvider>
-                    </ToastsProvider>
-                  </ResponsiveProvider>
-                </MediaContextProvider>
-              </ErrorBoundary>
-            </AnalyticsContext.Provider>
+            {/* <AnalyticsContext.Provider value={context?.analytics}> */}
+            <ErrorBoundary>
+              <MediaContextProvider onlyMatch={onlyMatchMediaQueries}>
+                <ResponsiveProvider
+                  mediaQueries={themeProps.mediaQueries}
+                  initialMatchingMediaQueries={onlyMatchMediaQueries as any}
+                >
+                  <ToastsProvider>
+                    <StickyProvider>
+                      <AuthIntentProvider>
+                        <AuthDialogProvider>
+                          <ProgressiveOnboardingProvider>
+                            <FocusVisible />
+                            <SiftContainer />
+                            {children}
+                          </ProgressiveOnboardingProvider>
+                        </AuthDialogProvider>
+                      </AuthIntentProvider>
+                    </StickyProvider>
+                  </ToastsProvider>
+                </ResponsiveProvider>
+              </MediaContextProvider>
+            </ErrorBoundary>
+            {/* </AnalyticsContext.Provider> */}
           </SystemContextProvider>
         </StateProvider>
       </HeadProvider>

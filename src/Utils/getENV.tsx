@@ -5,10 +5,19 @@ import { GlobalData, data as sd } from "sharify"
 export function getENV(ENV_VAR: keyof GlobalData) {
   let envVar
   if (typeof window === "undefined") {
-    const asyncLocalStorage = getAsyncLocalStorage()
-    envVar = asyncLocalStorage.getStore()?.get(ENV_VAR) || process.env[ENV_VAR]
+    if (process.env.NEXTJS) {
+      envVar = process.env[ENV_VAR]
+    } else {
+      const asyncLocalStorage = getAsyncLocalStorage()
+      envVar =
+        asyncLocalStorage.getStore()?.get(ENV_VAR) || process.env[ENV_VAR]
+    }
   } else {
-    envVar = sd[ENV_VAR]
+    if (window?.process?.env.NEXTJS) {
+      envVar = window.process?.env[ENV_VAR]
+    } else {
+      envVar = sd[ENV_VAR]
+    }
   }
 
   return envVar

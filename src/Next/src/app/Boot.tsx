@@ -1,21 +1,18 @@
 "use client"
 
-import { Theme, injectGlobalStyles } from "@artsy/palette"
-import { SystemContextProvider } from "System/SystemContext"
 import track from "react-tracking"
-
-const { GlobalStyles } = injectGlobalStyles()
+import { Boot as LegacyBoot } from "System/Router/Boot"
+import { createRelaySSREnvironment } from "System/Relay/createRelaySSREnvironment"
 
 export const Boot: React.FC<{ children: React.ReactNode }> = track(
   undefined,
   {}
 )(({ children }) => {
-  return (
-    <SystemContextProvider>
-      <Theme theme="v3">
-        <GlobalStyles />
-        {children}
-      </Theme>
-    </SystemContextProvider>
-  )
+  const relayEnvironment = createRelaySSREnvironment({
+    metaphysicsEndpoint: "https://metaphysics-staging.artsy.net/v2",
+    // cache: JSON.parse(window.__RELAY_BOOTSTRAP__ || "{}"),
+  })
+
+  // @ts-ignore
+  return <LegacyBoot relayEnvironment={relayEnvironment}>{children}</LegacyBoot>
 })

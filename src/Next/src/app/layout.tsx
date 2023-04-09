@@ -1,6 +1,11 @@
 import RootStyleRegistry from "Next/src/system/styles/RootStyleRegistry"
 import { Boot } from "Next/src/app/Boot"
 import { Layout } from "Apps/Components/Layouts"
+import Script from "next/script"
+
+import { bootstrapEnv } from "Next/src/system/env"
+
+const env = bootstrapEnv()
 
 export const metadata = {
   title: "Create Next App",
@@ -21,6 +26,16 @@ export default function RootLayout({
         // @ts-ignore - Next thing
         precedence="default"
       />
+      <Script strategy="beforeInteractive">
+        {`
+          window.process = {}
+          window.process.env = ${JSON.stringify(env.clientEnv)
+            .replace(/</g, "\\u003c")
+            .replace(/-->/g, "--\\>")
+            .replace(/\u2028/g, "\\u2028")
+            .replace(/\u2029/g, "\\u2029")}
+        `}
+      </Script>
       <body>
         <RootStyleRegistry>
           <Boot>

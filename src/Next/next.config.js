@@ -1,5 +1,10 @@
+const { bootstrapEnv } = require("./src/system/env")
+
+const env = bootstrapEnv()
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: env.serverEnv,
   experimental: {
     appDir: true,
     externalDir: true,
@@ -11,6 +16,11 @@ const nextConfig = {
       language: "typescript",
     },
     styledComponents: true,
+  },
+  typescript: {
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    ignoreBuildErrors: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
