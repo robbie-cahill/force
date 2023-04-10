@@ -3,7 +3,6 @@
 // - Automatically handles CSRF token, session ID, reCAPTCHA token
 
 import Cookies from "cookies-js"
-import { signInUsingEmail } from "Server/auth/signInUsingEmail"
 import { getENV } from "Utils/getENV"
 import { recaptcha as _recaptcha, RecaptchaAction } from "Utils/recaptcha"
 
@@ -24,25 +23,8 @@ export const login = async (args: {
   let response
 
   if (getENV("NEXTJS")) {
-    // response = await signInUsingEmail({
-    //   email: args.email,
-    //   password: args.password,
-    //   otp: args.authenticationCode.replace(/ /g, ""),
-    //   headers,
-    // })
-    response = await fetch("http://localhost:3000/api/login", {
-      headers,
-      method: "POST",
-      credentials: "same-origin",
-      body: JSON.stringify({
-        email: args.email,
-        password: args.password,
-        otp_attempt: args.authenticationCode.replace(/ /g, ""),
-        otpRequired: !!args.authenticationCode,
-        session_id: getENV("SESSION_ID"),
-        _csrf: Cookies.get("CSRF_TOKEN"),
-      }),
-    })
+    // Implement nextjs auth here
+    console.log("NEXTJS", "Implement nextjs auth here")
   } else {
     const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`
     response = await fetch(loginUrl, {
