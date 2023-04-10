@@ -66,6 +66,7 @@ declare module "sharify" {
       METAPHYSICS_ENDPOINT: string
       NETWORK_CACHE_SIZE: string
       NETWORK_CACHE_TTL: string
+      NEXTJS: boolean
       NODE_ENV: string
       NOTIFICATION_COUNT: string
       ONETRUST_SCRIPT_ID: string

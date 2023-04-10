@@ -3,8 +3,9 @@
 import track from "react-tracking"
 import { Boot as LegacyBoot } from "System/Router/Boot"
 import { createRelaySSREnvironment } from "System/Relay/createRelaySSREnvironment"
+import { SessionProvider } from "next-auth/react"
 
-export const Boot: React.FC<{ children: React.ReactNode }> = track(
+export const Providers: React.FC<{ children: React.ReactNode }> = track(
   undefined,
   {}
 )(({ children }) => {
@@ -13,6 +14,10 @@ export const Boot: React.FC<{ children: React.ReactNode }> = track(
     // cache: JSON.parse(window.__RELAY_BOOTSTRAP__ || "{}"),
   })
 
-  // @ts-ignore
-  return <LegacyBoot relayEnvironment={relayEnvironment}>{children}</LegacyBoot>
+  return (
+    <SessionProvider>
+      {/* @ts-ignore */}
+      <LegacyBoot relayEnvironment={relayEnvironment}>{children}</LegacyBoot>
+    </SessionProvider>
+  )
 })

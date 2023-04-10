@@ -3,6 +3,7 @@
 // - Automatically handles CSRF token, session ID, reCAPTCHA token
 
 import Cookies from "cookies-js"
+import { signInUsingEmail } from "Server/auth/signInUsingEmail"
 import { getENV } from "Utils/getENV"
 import { recaptcha as _recaptcha, RecaptchaAction } from "Utils/recaptcha"
 
@@ -17,23 +18,35 @@ export const login = async (args: {
   password: string
   authenticationCode: string
 }) => {
+  console.log("HIII")
   recaptcha("login_submit")
 
-  const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`
+  let response
 
-  const response = await fetch(loginUrl, {
-    headers,
-    method: "POST",
-    credentials: "same-origin",
-    body: JSON.stringify({
+  console.log(getENV("NEXTJS"))
+  if (getENV("NEXTJS")) {
+    response = await signInUsingEmail({
       email: args.email,
       password: args.password,
-      otp_attempt: args.authenticationCode.replace(/ /g, ""),
-      otpRequired: !!args.authenticationCode,
-      session_id: getENV("SESSION_ID"),
-      _csrf: Cookies.get("CSRF_TOKEN"),
-    }),
-  })
+      otp: args.authenticationCode.replace(/ /g, ""),
+      headers,
+    })
+  } else {
+    const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`
+    response = await fetch(loginUrl, {
+      headers,
+      method: "POST",
+      credentials: "same-origin",
+      body: JSON.stringify({
+        email: args.email,
+        password: args.password,
+        otp_attempt: args.authenticationCode.replace(/ /g, ""),
+        otpRequired: !!args.authenticationCode,
+        session_id: getENV("SESSION_ID"),
+        _csrf: Cookies.get("CSRF_TOKEN"),
+      }),
+    })
+  }
 
   if (response.ok) {
     const res = await response.json()
