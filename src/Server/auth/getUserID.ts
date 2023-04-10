@@ -11,7 +11,7 @@ export const getUserID = async ({ userAccessToken }: GetUserIDProps) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-ACCESS-TOKEN": userAccessToken!,
+        "X-ACCESS-TOKEN": userAccessToken as string,
       },
     })
 

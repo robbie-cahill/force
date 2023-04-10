@@ -27,9 +27,9 @@ export const signInUsingEmail = async ({
       client_id: process.env.ARTSY_ID,
       client_secret: process.env.ARTSY_SECRET,
       scope: "offline_access",
+      // _csrf: Cookies.get("CSRF_TOKEN"),
     },
   })
-
   return res
 
   // TODO

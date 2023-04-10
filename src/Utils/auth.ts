@@ -11,6 +11,7 @@ const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",
   "X-Requested-With": "XMLHttpRequest",
+  "Access-Control-Allow-Origin": "*",
 }
 
 export const login = async (args: {
@@ -18,18 +19,29 @@ export const login = async (args: {
   password: string
   authenticationCode: string
 }) => {
-  console.log("HIII")
   recaptcha("login_submit")
 
   let response
 
-  console.log(getENV("NEXTJS"))
   if (getENV("NEXTJS")) {
-    response = await signInUsingEmail({
-      email: args.email,
-      password: args.password,
-      otp: args.authenticationCode.replace(/ /g, ""),
+    // response = await signInUsingEmail({
+    //   email: args.email,
+    //   password: args.password,
+    //   otp: args.authenticationCode.replace(/ /g, ""),
+    //   headers,
+    // })
+    response = await fetch("http://localhost:3000/api/login", {
       headers,
+      method: "POST",
+      credentials: "same-origin",
+      body: JSON.stringify({
+        email: args.email,
+        password: args.password,
+        otp_attempt: args.authenticationCode.replace(/ /g, ""),
+        otpRequired: !!args.authenticationCode,
+        session_id: getENV("SESSION_ID"),
+        _csrf: Cookies.get("CSRF_TOKEN"),
+      }),
     })
   } else {
     const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`

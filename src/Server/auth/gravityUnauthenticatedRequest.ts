@@ -15,6 +15,7 @@ export const gravityUnauthenticatedRequest = async (
   try {
     const res = await fetch(`${process.env.API_URL}${payload.path}`, {
       method: payload.method || "GET",
+      credentials: "same-origin",
       headers: {
         "X-Xapp-Token": xAppToken as string,
         Accept: "application/json",
@@ -22,9 +23,8 @@ export const gravityUnauthenticatedRequest = async (
         "User-Agent": "Chrome", // TODO: getUserAgent(),
         ...payload.headers,
       },
-      body: payload.body ? JSON.stringify(payload.body) : undefined,
+      body: payload.body, // payload.body ? JSON.stringify(payload.body) : undefined,
     })
-    console.log(await res?.json())
     return res
   } catch (error) {
     console.error("[gravityUnauthenticatedRequest]", error)
