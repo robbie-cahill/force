@@ -1,72 +1,106 @@
 import NextAuth from "next-auth"
 import { UserinfoEndpointHandler } from "next-auth/providers"
-// import { Role } from "system"
-
+import CredentialsProvider from "next-auth/providers/credentials"
 import type { NextApiRequest, NextApiResponse } from "next"
+import qs from "qs"
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, {
     callbacks: {
-      signIn: async ({ profile }) => {
-        return true
-        // // @ts-expect-error
-        // const userRoles = (profile?.roles as string[]) || []
-        // return Object.values(Role).some(r => userRoles.includes(r))
+      session: async ({ session, token }) => {
+        if (token.user) {
+          session.user = token.user
+        }
+        return session
       },
-      jwt: async ({ token, user, account }) => {
-        if (account) {
-          token.access_token = account.access_token
-          // @ts-expect-error
-          token.roles = user?.roles
+      jwt: async ({ token, user }) => {
+        if (user) {
+          token.user = user
         }
         return token
       },
-      session: async ({ session, token }) => {
-        // @ts-ignore
-        session.user.accessToken = token.access_token
-        // @ts-ignore
-        session.user.roles = token.roles || []
-        return session
-      },
     },
     providers: [
-      {
-        id: "artsy",
-        clientId: process.env.ARTSY_ID,
-        clientSecret: process.env.ARTSY_SECRET,
-        name: "Artsy",
-        type: "oauth",
-        authorization: `${process.env.API_URL}/oauth2/authorize`,
-        token: {
-          url: `${process.env.API_URL}/oauth2/access_token?on_success=200`,
-          params: { on_success: 200 },
-        },
-        client: {
-          token_endpoint_auth_method: "client_secret_post",
-        },
-        userinfo: {
-          url: `${process.env.API_URL}/api/v1/me`,
-          async request(context) {
-            const userinfo = context?.provider
-              ?.userinfo as UserinfoEndpointHandler
-            const response = await fetch(userinfo.url!, {
-              headers: {
-                "X-Access-Token": context.tokens.access_token,
-              } as HeadersInit, // override default of Authorization: Bearer ... token
-            })
-            return await response.json()
+      CredentialsProvider({
+        id: "artsy-credentials",
+        name: "ArtsyCredentials",
+        credentials: {
+          email: {
+            label: "Email",
+            type: "email",
           },
+          password: { label: "Password", type: "password" },
+          otpAttempt: { label: "OTP", type: "text" },
+          otpRequired: { label: "OTP Required", type: "boolean" },
+          sessionId: { label: "Session ID", type: "text" },
+          _csrf: { label: "CSRF", type: "text" },
         },
-        profile(profile) {
-          return {
-            id: profile.id,
-            name: profile.name,
-            email: profile.email,
-            roles: profile.roles,
+        authorize: async (credentials, req) => {
+          const payload = {
+            email: credentials?.email,
+            password: credentials?.password,
+            otp_attempt: credentials?.otpAttempt,
+            otpRequired: credentials?.otpRequired,
+            session_id: credentials?.sessionId,
+            grant_type: "credentials",
+            client_id: process.env.ARTSY_ID,
+            client_secret: process.env.ARTSY_SECRET,
+            _csrf: credentials?._csrf,
           }
+
+          const xAppTokenURL = `${
+            process.env.API_URL
+          }/api/v1/xapp_token?${qs.stringify({
+            client_id: process.env.ARTSY_ID,
+            client_secret: process.env.ARTSY_SECRET,
+          })}`
+
+          const xAppTokenRes = await fetch(xAppTokenURL)
+          const xAppTokenResponse = await xAppTokenRes.json()
+
+          const accessTokenReq = await fetch(
+            `${process.env.API_URL}/oauth2/access_token`,
+            {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-Xapp-Token": xAppTokenResponse.xapp_token as string,
+                "X-Requested-With": "XMLHttpRequest",
+              },
+            }
+          )
+
+          const accessTokenRes = await accessTokenReq.json()
+
+          if (!accessTokenReq.ok) {
+            throw new Error(accessTokenRes.error_description)
+          }
+
+          if (accessTokenReq.ok && accessTokenRes) {
+            const userReq = await fetch(`${process.env.API_URL}/api/v1/me`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                "X-ACCESS-TOKEN": accessTokenRes.access_token as string,
+              },
+            })
+
+            const userRes = await userReq.json()
+
+            const user = {
+              ...accessTokenRes,
+              ...userRes,
+            }
+
+            return user
+          }
+
+          // Return null if user data could not be retrieved
+          return null
         },
-      },
+      }),
     ],
   })
 }

@@ -20,7 +20,6 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getSession(headers().get("cookie") ?? "")
-  console.log(session)
 
   return (
     <html lang="en">
@@ -45,7 +44,7 @@ export default async function RootLayout({
 
       <body>
         <RootStyleRegistry>
-          <Providers>
+          <Providers session={session}>
             <Layout>{children}</Layout>
           </Providers>
         </RootStyleRegistry>

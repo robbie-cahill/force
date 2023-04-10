@@ -5,13 +5,16 @@
 import Cookies from "cookies-js"
 import { getENV } from "Utils/getENV"
 import { recaptcha as _recaptcha, RecaptchaAction } from "Utils/recaptcha"
-import { signIn, getCsrfToken } from "Next/node_modules/next-auth/react"
+import {
+  signIn,
+  getSession,
+  // getCsrfToken,
+} from "Next/node_modules/next-auth/react"
 
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",
   "X-Requested-With": "XMLHttpRequest",
-  "Access-Control-Allow-Origin": "*",
 }
 
 export const login = async (args: {
@@ -21,16 +24,26 @@ export const login = async (args: {
 }) => {
   recaptcha("login_submit")
 
-  let response
-
   if (getENV("NEXTJS")) {
-    // Implement nextjs auth here
-    console.log("NEXTJS", "Implement nextjs auth here")
-    await signIn()
-    return
+    const response = await signIn("artsy-credentials", {
+      email: args.email,
+      password: args.password,
+      otpAttempt: args.authenticationCode.replace(/ /g, ""),
+      otpRequired: !!args.authenticationCode,
+      sessionId: getENV("SESSION_ID"),
+      _csrf: Cookies.get("CSRF_TOKEN"),
+      redirect: false,
+    })
+
+    if (response?.ok) {
+      const session = await getSession()
+      return session
+    }
+
+    return Promise.reject(new Error(response?.error))
   } else {
     const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`
-    response = await fetch(loginUrl, {
+    const response = await fetch(loginUrl, {
       headers,
       method: "POST",
       credentials: "same-origin",
@@ -43,20 +56,20 @@ export const login = async (args: {
         _csrf: Cookies.get("CSRF_TOKEN"),
       }),
     })
-  }
 
-  if (response.ok) {
-    const res = await response.json()
+    if (response.ok) {
+      const res = await response.json()
 
-    if (res.success) {
-      return res
+      if (res.success) {
+        return res
+      }
+
+      return Promise.reject(new Error(res.error))
     }
 
-    return Promise.reject(new Error(res.error))
+    const err = await response.json()
+    return await Promise.reject(new Error(err.error))
   }
-
-  const err = await response.json()
-  return await Promise.reject(new Error(err.error))
 }
 
 /**
