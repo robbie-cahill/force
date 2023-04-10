@@ -5,6 +5,7 @@
 import Cookies from "cookies-js"
 import { getENV } from "Utils/getENV"
 import { recaptcha as _recaptcha, RecaptchaAction } from "Utils/recaptcha"
+import { signIn, getCsrfToken } from "Next/node_modules/next-auth/react"
 
 const headers = {
   Accept: "application/json",
@@ -25,6 +26,8 @@ export const login = async (args: {
   if (getENV("NEXTJS")) {
     // Implement nextjs auth here
     console.log("NEXTJS", "Implement nextjs auth here")
+    await signIn()
+    return
   } else {
     const loginUrl = `${getENV("APP_URL")}${getENV("AP").loginPagePath}`
     response = await fetch(loginUrl, {
