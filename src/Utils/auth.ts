@@ -30,6 +30,7 @@ export const login = async (args: {
       password: args.password,
       otpAttempt: args.authenticationCode.replace(/ /g, ""),
       otpRequired: !!args.authenticationCode,
+      mode: "login",
       sessionId: getENV("SESSION_ID"),
       _csrf: Cookies.get("CSRF_TOKEN"),
       redirect: false,
@@ -50,6 +51,7 @@ export const login = async (args: {
       body: JSON.stringify({
         email: args.email,
         password: args.password,
+        mode: "login",
         otp_attempt: args.authenticationCode.replace(/ /g, ""),
         otpRequired: !!args.authenticationCode,
         session_id: getENV("SESSION_ID"),
@@ -156,36 +158,57 @@ export const signUp = async (args: {
   password: string
   agreedToReceiveEmails?: boolean
 }) => {
-  const signUpUrl = `${getENV("APP_URL")}${getENV("AP").signupPagePath}`
-
   const recaptchaToken = await recaptcha("signup_submit")
 
-  return await fetch(signUpUrl, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-    },
-    method: "POST",
-    credentials: "same-origin",
-    body: JSON.stringify({
+  if (getENV("NEXTJS")) {
+    const response = await signIn("artsy-credentials", {
       _csrf: Cookies.get("CSRF_TOKEN"),
-      agreed_to_receive_emails: args.agreedToReceiveEmails,
-      accepted_terms_of_service: true,
+      agreedToReceiveEmails: args.agreedToReceiveEmails,
       email: args.email,
+      mode: "signUp",
       name: args.name,
       password: args.password,
-      recaptcha_token: recaptchaToken,
-      session_id: getENV("SESSION_ID"),
-    }),
-  }).then(async response => {
-    if (response.ok) {
-      return await response.json()
+      recaptchaToken: recaptchaToken,
+      sessionId: getENV("SESSION_ID"),
+      redirect: false,
+    })
+
+    if (response?.ok) {
+      const session = await getSession()
+      return session
     }
 
-    const err = await response.json()
-    return Promise.reject(new Error(err.error))
-  })
+    return Promise.reject(new Error(response?.error))
+  } else {
+    const signUpUrl = `${getENV("APP_URL")}${getENV("AP").signupPagePath}`
+
+    return await fetch(signUpUrl, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      method: "POST",
+      credentials: "same-origin",
+      body: JSON.stringify({
+        _csrf: Cookies.get("CSRF_TOKEN"),
+        agreed_to_receive_emails: args.agreedToReceiveEmails,
+        accepted_terms_of_service: true,
+        email: args.email,
+        name: args.name,
+        password: args.password,
+        recaptcha_token: recaptchaToken,
+        session_id: getENV("SESSION_ID"),
+      }),
+    }).then(async response => {
+      if (response.ok) {
+        return await response.json()
+      }
+
+      const err = await response.json()
+      return Promise.reject(new Error(err.error))
+    })
+  }
 }
 
 export const logout = async () => {

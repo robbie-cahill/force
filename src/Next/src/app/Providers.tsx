@@ -21,7 +21,7 @@ export const Providers: React.FC<{
   return (
     <SessionProvider>
       {/* @ts-ignore */}
-      <LegacyBoot user={session.user} relayEnvironment={relayEnvironment}>
+      <LegacyBoot user={session?.user} relayEnvironment={relayEnvironment}>
         {children}
       </LegacyBoot>
     </SessionProvider>
