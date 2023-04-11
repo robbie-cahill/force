@@ -1,3 +1,4 @@
+import { fetchXAppToken } from "Next/src/system/auth/fetchXAppToken"
 import qs from "qs"
 
 export interface LoginCredentials {
@@ -22,15 +23,7 @@ export const login = async (credentials: LoginCredentials): Promise<any> => {
     _csrf: credentials._csrf,
   }
 
-  const xAppTokenURL = `${process.env.API_URL}/api/v1/xapp_token?${qs.stringify(
-    {
-      client_id: process.env.ARTSY_ID,
-      client_secret: process.env.ARTSY_SECRET,
-    }
-  )}`
-
-  const xAppTokenRes = await fetch(xAppTokenURL)
-  const xAppTokenResponse = await xAppTokenRes.json()
+  const { xAppToken } = await fetchXAppToken()
 
   const accessTokenReq = await fetch(
     `${process.env.API_URL}/oauth2/access_token`,
@@ -40,7 +33,7 @@ export const login = async (credentials: LoginCredentials): Promise<any> => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        "X-Xapp-Token": xAppTokenResponse.xapp_token as string,
+        "X-Xapp-Token": xAppToken,
         "X-Requested-With": "XMLHttpRequest",
       },
     }

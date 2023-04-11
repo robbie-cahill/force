@@ -8,7 +8,7 @@ import { Session } from "next-auth"
 
 export const Providers: React.FC<{
   children: React.ReactNode
-  session: Session
+  session: Session | null
 }> = track(
   undefined,
   {}

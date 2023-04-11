@@ -10,6 +10,7 @@ import {
   getSession,
   // getCsrfToken,
 } from "Next/node_modules/next-auth/react"
+import { signOut } from "Next/src/system/auth/signOut"
 
 const headers = {
   Accept: "application/json",
@@ -212,24 +213,35 @@ export const signUp = async (args: {
 }
 
 export const logout = async () => {
-  const logoutUrl = `${getENV("APP_URL")}${getENV("AP").logoutPath}`
+  if (getENV("NEXTJS")) {
+    const response = await signOut()
 
-  const response = await fetch(logoutUrl, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      "X-Requested-With": "XMLHttpRequest",
-    },
-    method: "DELETE",
-    credentials: "same-origin",
-  })
+    if (response.ok) {
+      return await response.json()
+    }
 
-  if (response.ok) {
-    return await response.json()
+    const err = await response.json()
+    return Promise.reject(new Error(err.error))
+  } else {
+    const logoutUrl = `${getENV("APP_URL")}${getENV("AP").logoutPath}`
+
+    const response = await fetch(logoutUrl, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      method: "DELETE",
+      credentials: "same-origin",
+    })
+
+    if (response.ok) {
+      return await response.json()
+    }
+
+    const err = await response.json()
+    return Promise.reject(new Error(err.error))
   }
-
-  const err = await response.json()
-  return Promise.reject(new Error(err.error))
 }
 
 /**
