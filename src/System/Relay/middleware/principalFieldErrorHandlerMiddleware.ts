@@ -1,4 +1,3 @@
-import { HttpError } from "found"
 import { get } from "Utils/get"
 
 export function principalFieldErrorHandlerMiddleware() {
@@ -14,5 +13,18 @@ export function principalFieldErrorHandlerMiddleware() {
     } else {
       return res
     }
+  }
+}
+
+export default class HttpError {
+  isFoundHttpError = true
+
+  status: number
+
+  data: any
+
+  constructor(status: number, data?: any) {
+    this.status = status
+    this.data = data
   }
 }

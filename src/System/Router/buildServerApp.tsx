@@ -2,9 +2,7 @@ import path from "path"
 import * as React from "react"
 import { isFunction } from "lodash"
 import ReactDOMServer from "react-dom/server"
-import serialize from "serialize-javascript"
 import { ServerStyleSheet } from "styled-components"
-
 import { Resolver } from "found-relay"
 import createRender from "found/createRender"
 import {
@@ -39,6 +37,7 @@ import { buildServerAppContext } from "System/Router/buildServerAppContext"
 import { AppRouteConfig } from "System/Router/Route"
 import { NextFunction } from "express"
 import { findRoutesByPath } from "./Utils/findRoutesByPath"
+import { cleanRelayData, serializeRelayData } from "System/Relay/relaySSRUtils"
 
 export interface ServerAppResolve {
   bodyHTML?: string
@@ -308,44 +307,4 @@ function isRedirect(
   farceResult: FarceElementResult | FarceRedirectResult
 ): farceResult is FarceRedirectResult {
   return farceResult.hasOwnProperty("redirect")
-}
-
-/**
- * FIXME: Relay SSR middleware is passing a _res object across which
- * has circular references, leading to issues *ONLY* on staging / prod
- * which can't be reproduced locally. This strips out _res as a quickfix
- * though this should be PR'd back at relay-modern-network-modern-ssr.
- */
-function cleanRelayData(relayData: any) {
-  try {
-    relayData.forEach(item => {
-      item.forEach(i => {
-        delete i._res
-      })
-    })
-  } catch (error) {
-    console.error("[Artsy/Router/buildServerApp] Error cleaning data", error)
-  }
-
-  return relayData
-}
-/**
- * Serialize data for client-side consumption
- */
-function serializeRelayData(relayData: any) {
-  let hydrationData
-  try {
-    hydrationData = serialize(relayData, {
-      isJSON: true,
-    })
-  } catch (error) {
-    hydrationData = "{}"
-    console.error(
-      "[Artsy/Router/buildServerApp] Error serializing data:",
-      error
-    )
-  }
-  return serialize(hydrationData || {}, {
-    isJSON: true,
-  })
 }

@@ -1,3 +1,5 @@
+import "regenerator-runtime/runtime"
+
 import RootStyleRegistry from "Next/src/system/styles/RootStyleRegistry"
 import { Providers } from "Next/src/app/Providers"
 import { Layout } from "Apps/Components/Layouts"
@@ -6,6 +8,12 @@ import Script from "next/script"
 import { bootstrapEnv } from "Next/src/system/env"
 import { Session } from "next-auth"
 import { headers } from "next/headers"
+import { fetchRelayData } from "Next/src/system/relay"
+import { graphql } from "relay-runtime"
+import { layoutAppQuery } from "__generated__/layoutAppQuery.graphql"
+import { Suspense } from "react"
+import { cleanRelayData, serializeRelayData } from "System/Relay/relaySSRUtils"
+import RelayServerSSR from "react-relay-network-modern-ssr/lib/server"
 
 const env = bootstrapEnv()
 
@@ -21,18 +29,43 @@ export default async function RootLayout({
 }) {
   const session = await getSession(headers().get("cookie") ?? "")
 
+  const { data, environment } = await fetchRelayData<layoutAppQuery>({
+    query: graphql`
+      query layoutAppQuery {
+        me {
+          createdAt
+        }
+      }
+    `,
+  })
+
+  console.log(data)
+
+  const relayData = serializeRelayData(
+    cleanRelayData(
+      await (environment.relaySSRMiddleware as RelayServerSSR).getCache()
+    )
+  )
+
   return (
     <html lang="en">
-      <link
-        href="https://webfonts.artsy.net/all-webfonts.css"
-        rel="stylesheet"
-        type="text/css"
-        // @ts-ignore - Next thing
-        precedence="default"
-      />
+      <head>
+        <link
+          href="https://webfonts.artsy.net/all-webfonts.css"
+          rel="stylesheet"
+          type="text/css"
+          // @ts-ignore - Next thing
+          precedence="default"
+        />
 
-      <Script strategy="beforeInteractive">
-        {`
+        <Script strategy="beforeInteractive" id="relayData">
+          {`
+            var __RELAY_BOOTSTRAP__ = ${relayData};
+          `}
+        </Script>
+
+        <Script strategy="beforeInteractive" id="envVariables">
+          {`
           window.process = {}
           window.process.env = ${JSON.stringify(env.clientEnv)
             .replace(/</g, "\\u003c")
@@ -40,12 +73,15 @@ export default async function RootLayout({
             .replace(/\u2028/g, "\\u2028")
             .replace(/\u2029/g, "\\u2029")}
         `}
-      </Script>
+        </Script>
+      </head>
 
       <body>
         <RootStyleRegistry>
           <Providers session={session}>
-            <Layout>{children}</Layout>
+            <Layout>
+              <Suspense fallback={null}>{children}</Suspense>
+            </Layout>
           </Providers>
         </RootStyleRegistry>
       </body>

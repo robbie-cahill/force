@@ -13,15 +13,18 @@ export const Providers: React.FC<{
   undefined,
   {}
 )(({ children, session }) => {
-  const relayEnvironment = createRelaySSREnvironment({
-    metaphysicsEndpoint: "https://metaphysics-staging.artsy.net/v2",
-    // cache: JSON.parse(window.__RELAY_BOOTSTRAP__ || "{}"),
+  const environment = createRelaySSREnvironment({
+    metaphysicsEndpoint: process.env.METAPHYSICS_ENDPOINT + "/v2",
+    cache:
+      typeof window === "undefined"
+        ? {}
+        : JSON.parse(window.__RELAY_BOOTSTRAP__ || "{}"),
+    user: session?.user,
   })
 
   return (
     <SessionProvider>
-      {/* @ts-ignore */}
-      <LegacyBoot user={session?.user} relayEnvironment={relayEnvironment}>
+      <LegacyBoot user={session?.user} relayEnvironment={environment}>
         {children}
       </LegacyBoot>
     </SessionProvider>

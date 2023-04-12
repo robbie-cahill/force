@@ -18,6 +18,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       jwt: async ({ token, user }) => {
         if (user) {
           token.user = user
+          token.user.accessToken = token.user.access_token
         }
         return token
       },
