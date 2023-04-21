@@ -10,7 +10,11 @@ import { FC, useEffect, useRef, useState } from "react"
 import { createFragmentContainer, graphql } from "react-relay"
 import styled, { css } from "styled-components"
 import { NewSearchInputPills_viewer$data } from "__generated__/NewSearchInputPills_viewer.graphql"
-import { PILLS, TOP_PILL } from "Components/Search/NewSearch/constants"
+import {
+  PILLS,
+  PillType,
+  TOP_PILL,
+} from "Components/Search/NewSearch/constants"
 
 const ChevronStyle = css`
   position: absolute;
@@ -64,6 +68,7 @@ interface NewSearchInputPillsProps {
 
 const NewSearchInputPills: FC<NewSearchInputPillsProps> = ({ viewer }) => {
   const pillsRef = useRef<HTMLDivElement>(null)
+  const [selectedPill, setSelectedPill] = useState<PillType>(TOP_PILL)
   const [showPreviousChevron, setShowPreviousChevron] = useState<boolean>(false)
   const [showNextChevron, setShowNextChevron] = useState<boolean>(false)
 
@@ -179,6 +184,10 @@ const NewSearchInputPills: FC<NewSearchInputPillsProps> = ({ viewer }) => {
     }
   }
 
+  const onPillClick = (pill: PillType) => {
+    setSelectedPill(pill)
+  }
+
   return (
     <Flex alignItems="center" bg="white">
       <Flex position="absolute" left={0} zIndex={showPreviousChevron ? 0 : -1}>
@@ -194,10 +203,17 @@ const NewSearchInputPills: FC<NewSearchInputPillsProps> = ({ viewer }) => {
       >
         {PILLS.map(pill => {
           const { key, displayName } = pill
+          const selected = selectedPill.key === pill.key
           const disabled = isPillDisabled(key)
 
           return (
-            <Pill key={key} mr={1} disabled={disabled}>
+            <Pill
+              key={key}
+              mr={1}
+              selected={selected}
+              disabled={disabled}
+              onClick={() => onPillClick(pill)}
+            >
               {displayName}
             </Pill>
           )
