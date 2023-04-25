@@ -1,10 +1,9 @@
-import { Flex, Join, Separator, Spacer, Text } from "@artsy/palette"
+import { Expandable, Flex, Join, Separator, Spacer, Text } from "@artsy/palette"
 import { createFragmentContainer, graphql } from "react-relay"
 import { ArtworkSidebarArtistsFragmentContainer } from "./ArtworkSidebarArtists"
 import { ArtworkSidebar_artwork$data } from "__generated__/ArtworkSidebar_artwork.graphql"
 import { ArtworkSidebar_me$data } from "__generated__/ArtworkSidebar_me.graphql"
 import { ArtworkSidebarShippingInformationFragmentContainer } from "./ArtworkSidebarShippingInformation"
-import { SidebarExpandable } from "Components/Artwork/SidebarExpandable"
 import { useTranslation } from "react-i18next"
 import { ArtworkSidebarArtworkTitleFragmentContainer } from "./ArtworkSidebarArtworkTitle"
 import { ArtworkSidebarDetailsFragmentContainer } from "./ArtworkSidebarDetails"
@@ -21,7 +20,8 @@ import { ArtworkSidebarEstimatedValueFragmentContainer } from "./ArtworkSidebarE
 import { ArtworkSidebarBiddingClosedMessageFragmentContainer } from "./ArtworkSidebarBiddingClosedMessage"
 import { ArtworkSidebarAuctionTimerFragmentContainer } from "./ArtworkSidebarAuctionTimer"
 import { ArtworkSidebarAuctionPollingRefetchContainer } from "./ArtworkSidebarAuctionInfoPolling"
-import { ContextModule } from "@artsy/cohesion"
+import { ActionType, ContextModule, OwnerType } from "@artsy/cohesion"
+import { useTracking } from "react-tracking"
 
 export interface ArtworkSidebarProps {
   artwork: ArtworkSidebar_artwork$data
@@ -82,6 +82,28 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
 
   const shoudlDisplayLotLabel = !!isInAuction && !!lotLabel
 
+  const { trackEvent } = useTracking()
+  // Expanded state for shipping component
+  const [expandedShipping, setExpandedShipping] = useState(false)
+
+  // Expanded state for guarantee component
+  const [expandedGuarantee, setExpandedGuarantee] = useState(false)
+
+  const handleExpandableClick = (
+    label: string,
+    expanded: boolean,
+    setExpanded: (expanded: boolean) => void
+  ) => {
+    setExpanded(!expanded)
+    trackEvent({
+      action: ActionType.toggledAccordion,
+      context_module: ContextModule.artworkSidebar,
+      context_owner_type: OwnerType.artwork,
+      subject: label,
+      expand: !expanded,
+    })
+  }
+
   return (
     <Flex flexDirection="column" data-test={ContextModule.artworkSidebar}>
       {shoudlDisplayLotLabel && (
@@ -124,25 +146,40 @@ export const ArtworkSidebar: React.FC<ArtworkSidebarProps> = ({
 
       {!isSold && artworkEcommerceAvailable && (
         <>
-          <Separator />
-          <SidebarExpandable
+          <Expandable
             label={t`artworkPage.sidebar.shippingAndTaxes.expandableLabel`}
+            pt={0}
+            onClick={() =>
+              handleExpandableClick(
+                t`artworkPage.sidebar.shippingAndTaxes.expandableLabel`,
+                expandedShipping,
+                setExpandedShipping
+              )
+            }
+            borderColor="black10"
           >
             <ArtworkSidebarShippingInformationFragmentContainer
               artwork={artwork}
             />
-          </SidebarExpandable>
+          </Expandable>
         </>
       )}
 
       {!!isEligibleForArtsyGuarantee && (
         <>
-          <Separator />
-          <SidebarExpandable
+          <Expandable
             label={t`artworkPage.sidebar.artsyGuarantee.expandableLabel`}
+            onClick={() =>
+              handleExpandableClick(
+                t`artworkPage.sidebar.artsyGuarantee.expandableLabel`,
+                expandedGuarantee,
+                setExpandedGuarantee
+              )
+            }
+            borderColor="black10"
           >
             <ArtworkSidebarArtsyGuarantee />
-          </SidebarExpandable>
+          </Expandable>
         </>
       )}
       <Separator />
