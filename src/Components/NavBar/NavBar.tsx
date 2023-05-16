@@ -80,9 +80,8 @@ export const NavBar: React.FC = track(
   const isLoggedIn = Boolean(user)
   const showNotificationCount = isLoggedIn && !showMobileMenu
 
-  const isSearchDropDownImprovementsEnabled = useFeatureFlag(
-    "fx-force-search-dropdown-improvements"
-  )
+  const isSearchDropDownImprovementsEnabled =
+    useFeatureFlag("fx-force-search-dropdown-improvements") || true // TODO: remove
 
   // Close mobile menu if dragging window from small size to desktop
   useEffect(() => {
@@ -194,8 +193,7 @@ export const NavBar: React.FC = track(
                 flex={1}
                 alignItems="center"
                 onFocus={() => {
-                  if (!isSearchDropDownImprovementsEnabled)
-                    setSearchFocused(true)
+                  setSearchFocused(true)
                 }}
                 // Update only on mobile
                 position={[
