@@ -132,8 +132,8 @@ describe("TransactionDetailsSummaryItem", () => {
 
       const text = wrapper.text()
 
-      expect(text).toMatch("Shipping**Waiting for final costs")
-      expect(text).toMatch("Tax*Waiting for final costs")
+      expect(text).toMatch("Shipping*Waiting for final costs")
+      expect(text).toMatch("Tax†Waiting for final costs")
     })
 
     it("shows tax import reminder", async () => {
@@ -159,7 +159,7 @@ describe("TransactionDetailsSummaryItem", () => {
       const text = wrapper.text()
 
       expect(text).toMatch(
-        "**Shipping costs to be confirmed by gallery. You will be able to review the total price before payment."
+        "*Shipping costs to be confirmed by gallery. You will be able to review the total price before payment."
       )
     })
 
