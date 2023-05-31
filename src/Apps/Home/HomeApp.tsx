@@ -1,8 +1,7 @@
 import { Spacer, Join } from "@artsy/palette"
 import * as React from "react"
 import { createFragmentContainer, graphql } from "react-relay"
-import { HomeApp_featuredEventsOrderedSet$data } from "__generated__/HomeApp_featuredEventsOrderedSet.graphql"
-import { HomeApp_heroUnitsConnection$data } from "__generated__/HomeApp_heroUnitsConnection.graphql"
+import { HomeApp_viewer$data } from "__generated__/HomeApp_viewer.graphql"
 import { HomeFeaturedMarketNewsQueryRenderer } from "./Components/HomeFeaturedMarketNews"
 import { HomeFeaturedEventsRailFragmentContainer } from "./Components/HomeFeaturedEventsRail"
 import { HomeMeta } from "./Components/HomeMeta"
@@ -18,13 +17,11 @@ import { HomeEmergingPicksArtworksRailQueryRenderer } from "./Components/HomeEme
 import { HomeHeroUnitsFragmentContainer } from "./Components/HomeHeroUnits"
 
 interface HomeAppProps {
-  featuredEventsOrderedSet: HomeApp_featuredEventsOrderedSet$data | null
-  heroUnitsConnection: HomeApp_heroUnitsConnection$data
+  viewer: HomeApp_viewer$data
 }
 
 export const HomeApp: React.FC<HomeAppProps> = ({
-  featuredEventsOrderedSet,
-  heroUnitsConnection,
+  viewer: { featuredEventsOrderedSet, heroUnitsConnection },
 }) => {
   return (
     <>
@@ -34,7 +31,9 @@ export const HomeApp: React.FC<HomeAppProps> = ({
 
       <Spacer y={[2, 0]} />
 
-      <HomeHeroUnitsFragmentContainer heroUnits={heroUnitsConnection} />
+      {heroUnitsConnection && (
+        <HomeHeroUnitsFragmentContainer heroUnits={heroUnitsConnection} />
+      )}
 
       <Spacer y={[4, 6]} />
 
@@ -70,14 +69,14 @@ export const HomeApp: React.FC<HomeAppProps> = ({
 }
 
 export const HomeAppFragmentContainer = createFragmentContainer(HomeApp, {
-  featuredEventsOrderedSet: graphql`
-    fragment HomeApp_featuredEventsOrderedSet on OrderedSet {
-      ...HomeFeaturedEventsRail_orderedSet
-    }
-  `,
-  heroUnitsConnection: graphql`
-    fragment HomeApp_heroUnitsConnection on HeroUnitConnection {
-      ...HomeHeroUnits_heroUnits
+  viewer: graphql`
+    fragment HomeApp_viewer on Viewer {
+      featuredEventsOrderedSet: orderedSet(id: "529939e2275b245e290004a0") {
+        ...HomeFeaturedEventsRail_orderedSet
+      }
+      heroUnitsConnection(first: 10) {
+        ...HomeHeroUnits_heroUnits
+      }
     }
   `,
 })
