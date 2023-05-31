@@ -1,9 +1,9 @@
 version: 2.1
 
 orbs:
-  artsy-remote-docker: artsy/remote-docker@volatile
+  hokusai: artsy/hokusai@dev:04ff62549a4b112854e973eaf5c4dfff
+  artsy-remote-docker: artsy/remote-docker@dev:04ff62549a4b112854e973eaf5c4dfff
   aws-s3: circleci/aws-s3@2.0.0
-  hokusai: artsy/hokusai@volatile
   horizon: artsy/release@volatile
   slack: circleci/slack@4.12.5
   yarn: artsy/yarn@6.5.0
