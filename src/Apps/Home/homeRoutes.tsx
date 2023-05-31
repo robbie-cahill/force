@@ -9,7 +9,7 @@ const HomeApp = loadable(
 
 export const homeRoutes: AppRouteConfig[] = [
   {
-    path: "/",
+    path: "/homepage",
     getComponent: () => HomeApp,
     onClientSideRender: () => {
       HomeApp.preload()
