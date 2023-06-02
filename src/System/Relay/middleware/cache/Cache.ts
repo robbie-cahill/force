@@ -53,7 +53,7 @@ export class Cache {
 
       try {
         const rawCachedRes = await cache.get(cacheKey)
-
+        console.log("rawCachedRes", rawCachedRes)
         if (rawCachedRes) {
           cachedRes = JSON.parse(rawCachedRes)
           logger.log("\n[RelayCache#get] Success", cacheKey)
