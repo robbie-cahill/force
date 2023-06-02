@@ -10,6 +10,7 @@ const HomeApp = loadable(
 export const homeRoutes: AppRouteConfig[] = [
   {
     path: "/",
+    cacheConfig: { force: true },
     getComponent: () => HomeApp,
     onClientSideRender: () => {
       HomeApp.preload()
