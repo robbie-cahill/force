@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f90ae89d09e541394b4d559347551ab8>>
+ * @generated SignedSource<<8330d841f49169de3c6448891be8ea22>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,7 @@ export type ArtistEditorialNewsGrid_artist$data = {
       } | null;
     } | null> | null;
   } | null;
+  readonly href: string | null;
   readonly internalID: string;
   readonly name: string | null;
   readonly slug: string;
@@ -58,6 +59,13 @@ v1 = {
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "href",
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [],
@@ -74,6 +82,7 @@ return {
       "storageKey": null
     },
     (v1/*: any*/),
+    (v2/*: any*/),
     {
       "alias": null,
       "args": [
@@ -120,13 +129,7 @@ return {
                   "name": "CellArticle_article"
                 },
                 (v0/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "href",
-                  "storageKey": null
-                },
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -245,6 +248,6 @@ return {
 };
 })();
 
-(node as any).hash = "2357bc7f7758a1d78caf9ed8a8e3cd60";
+(node as any).hash = "05fe5a334fe56f827697add196310dac";
 
 export default node;

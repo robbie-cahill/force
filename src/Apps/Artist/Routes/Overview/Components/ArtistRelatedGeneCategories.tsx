@@ -1,4 +1,4 @@
-import { Box, Pill, PillProps, Spacer, Text } from "@artsy/palette"
+import { Box, Flex, Pill, Spacer, Text } from "@artsy/palette"
 import { FC } from "react"
 import { createFragmentContainer, graphql } from "react-relay"
 import { useSystemContext } from "System/useSystemContext"
@@ -15,32 +15,31 @@ interface ArtistRelatedGeneCategoriesProps {
 const ArtistRelatedGeneCategories: FC<ArtistRelatedGeneCategoriesProps> = ({
   artist,
 }) => {
-  const categories = extractNodes(artist.related?.genes)
+  const genes = extractNodes(artist.related?.genes)
 
-  if (categories.length === 0) return null
+  if (genes.length === 0) return null
 
   return (
-    <>
+    <Box>
       <Text variant="lg-display">Related Categories</Text>
 
       <Spacer y={4} />
 
-      <Box mb={-1}>
-        {categories.map(category => {
-          const props = {
-            as: RouterLink,
-            to: category.href,
-            key: category.name,
-          } as PillProps
-
+      <Flex flexWrap="wrap" gap={1}>
+        {genes.map(gene => {
           return (
-            <Pill mr={1} mb={1} {...props}>
-              {category.name}
+            <Pill
+              key={gene.internalID}
+              as={RouterLink}
+              // @ts-ignore
+              to={gene.href}
+            >
+              {gene.name}
             </Pill>
           )
         })}
-      </Box>
-    </>
+      </Flex>
+    </Box>
   )
 }
 
@@ -53,6 +52,7 @@ export const ArtistRelatedGeneCategoriesFragmentContainer = createFragmentContai
           genes {
             edges {
               node {
+                internalID
                 href
                 name
               }

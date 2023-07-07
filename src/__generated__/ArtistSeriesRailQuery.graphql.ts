@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29d3a43788374e12f1fb53dc7aacdcf5>>
+ * @generated SignedSource<<4bc01e7883eff10dfca2fafa36732bd8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -81,11 +81,18 @@ return {
         "selections": [
           {
             "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "href",
+            "storageKey": null
+          },
+          {
+            "alias": null,
             "args": [
               {
                 "kind": "Literal",
                 "name": "first",
-                "value": 50
+                "value": 12
               }
             ],
             "concreteType": "ArtistSeriesConnection",
@@ -113,20 +120,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "internalID",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "title",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "slug",
                         "storageKey": null
                       },
@@ -134,7 +127,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "featured",
+                        "name": "title",
                         "storageKey": null
                       },
                       {
@@ -158,12 +151,20 @@ return {
                               {
                                 "kind": "Literal",
                                 "name": "height",
-                                "value": 244
+                                "value": 334
+                              },
+                              {
+                                "kind": "Literal",
+                                "name": "version",
+                                "value": [
+                                  "larger",
+                                  "large"
+                                ]
                               },
                               {
                                 "kind": "Literal",
                                 "name": "width",
-                                "value": 325
+                                "value": 445
                               }
                             ],
                             "concreteType": "CroppedImageUrl",
@@ -171,20 +172,6 @@ return {
                             "name": "cropped",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "width",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "height",
-                                "storageKey": null
-                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -200,9 +187,23 @@ return {
                                 "storageKey": null
                               }
                             ],
-                            "storageKey": "cropped(height:244,width:325)"
+                            "storageKey": "cropped(height:334,version:[\"larger\",\"large\"],width:445)"
                           }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "internalID",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "featured",
                         "storageKey": null
                       }
                     ],
@@ -212,7 +213,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "artistSeriesConnection(first:50)"
+            "storageKey": "artistSeriesConnection(first:12)"
           },
           {
             "alias": null,
@@ -227,12 +228,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3a9b02512c316395a03af0b136ffea2f",
+    "cacheID": "b85d4401eb0600b69e16a3a6a10623c9",
     "id": null,
     "metadata": {},
     "name": "ArtistSeriesRailQuery",
     "operationKind": "query",
-    "text": "query ArtistSeriesRailQuery(\n  $id: String!\n) {\n  artist(id: $id) {\n    ...ArtistSeriesRail_artist\n    id\n  }\n}\n\nfragment ArtistSeriesItem_artistSeries on ArtistSeries {\n  title\n  slug\n  featured\n  internalID\n  artworksCountMessage\n  image {\n    cropped(width: 325, height: 244) {\n      width\n      height\n      src\n      srcSet\n    }\n  }\n}\n\nfragment ArtistSeriesRail_artist on Artist {\n  artistSeriesConnection(first: 50) {\n    edges {\n      node {\n        internalID\n        ...ArtistSeriesItem_artistSeries\n      }\n    }\n  }\n}\n"
+    "text": "query ArtistSeriesRailQuery(\n  $id: String!\n) {\n  artist(id: $id) {\n    ...ArtistSeriesRail_artist\n    id\n  }\n}\n\nfragment ArtistSeriesRail_artist on Artist {\n  href\n  artistSeriesConnection(first: 12) {\n    edges {\n      node {\n        ...CellArtistSeries_artistSeries\n        internalID\n        featured\n        slug\n      }\n    }\n  }\n}\n\nfragment CellArtistSeries_artistSeries on ArtistSeries {\n  slug\n  title\n  artworksCountMessage\n  image {\n    cropped(width: 445, height: 334, version: [\"larger\", \"large\"]) {\n      src\n      srcSet\n    }\n  }\n}\n"
   }
 };
 })();

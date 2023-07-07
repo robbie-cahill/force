@@ -35,9 +35,7 @@ describe("ArtistCareerHighlights", () => {
     const button = screen.getByRole("button")
     fireEvent.click(button)
 
-    expect(
-      screen.getByText("Highlights and Achievements Continued")
-    ).toBeInTheDocument()
+    expect(screen.getByText("Highlights and Achievements")).toBeInTheDocument()
     expect(
       screen.getByText("Solo show at a major institution")
     ).toBeInTheDocument()
@@ -63,9 +61,7 @@ describe("ArtistCareerHighlights", () => {
     const button = screen.getByRole("button")
     fireEvent.click(button)
 
-    expect(
-      screen.getByText("Highlights and Achievements Continued")
-    ).toBeInTheDocument()
+    expect(screen.getByText("Highlights and Achievements")).toBeInTheDocument()
     expect(
       screen.getByText("Solo show at 2 major institutions")
     ).toBeInTheDocument()
@@ -83,7 +79,7 @@ describe("ArtistCareerHighlights", () => {
     })
 
     expect(
-      screen.queryByText("Highlights and Achievements Continued")
+      screen.queryByText("Highlights and Achievements")
     ).not.toBeInTheDocument()
     expect(screen.queryByText("View Test Artist's CV")).not.toBeInTheDocument()
   })

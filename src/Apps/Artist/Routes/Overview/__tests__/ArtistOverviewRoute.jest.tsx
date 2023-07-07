@@ -6,6 +6,7 @@ import { ArtistOverviewRouteFragmentContainer } from "Apps/Artist/Routes/Overvie
 jest.unmock("react-relay")
 jest.mock("react-head", () => ({
   Title: () => null,
+  Meta: () => null,
 }))
 
 const { renderWithRelay } = setupTestWrapperTL({
