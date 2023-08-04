@@ -68,7 +68,7 @@ export const ActiveFilterPillsAndCreateAlert: React.FC<ActiveFilterPillsAndCreat
               <ProgressiveOnboardingAlertReady>
                 {({ onSkip: readySkip }) => (
                   <Button
-                    variant="secondaryBlack"
+                    variant="tertiary"
                     size="small"
                     Icon={BellStrokeIcon}
                     onClick={() => {

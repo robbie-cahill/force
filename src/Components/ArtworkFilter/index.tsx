@@ -18,10 +18,8 @@ import {
   Box,
   BoxProps,
   Button,
-  Column,
   Flex,
   FullBleed,
-  GridColumns,
   Spacer,
   Text,
 } from "@artsy/palette"
@@ -43,6 +41,9 @@ import { useArtworkGridContext } from "Components/ArtworkGrid/ArtworkGridContext
 import { Jump } from "Utils/Hooks/useJump"
 import FilterIcon from "@artsy/icons/FilterIcon"
 import { ProgressiveOnboardingAlertSelectFilter } from "Components/ProgressiveOnboarding/ProgressiveOnboardingAlertSelectFilter"
+import { ArtworkFilterDrawer } from "Components/ArtworkFilter/ArtworkFilterDrawer"
+import { ArtworkFilterPills } from "Components/ArtworkFilter/ArtworkFilterPills"
+import { ArtworkFilterCreateAlert } from "Components/ArtworkFilter/ArtworkFilterCreateAlert"
 
 interface ArtworkFilterProps extends SharedArtworkFilterContextProps, BoxProps {
   Filters?: JSX.Element
@@ -51,7 +52,7 @@ interface ArtworkFilterProps extends SharedArtworkFilterContextProps, BoxProps {
   relayRefetchInputVariables?: object
   // Root-level variables passed to Relay query
   relayVariables?: object
-  FilterPillsSection?: JSX.Element
+  FilterPillsSection?: JSX.Element // TODO: Remove
   viewer
 }
 
@@ -102,7 +103,6 @@ export const BaseArtworkFilter: React.FC<
   relayRefetchInputVariables = {},
   relayVariables = {},
   viewer,
-  FilterPillsSection,
   ...rest
 }) => {
   const tracking = useTracking()
@@ -276,8 +276,6 @@ export const BaseArtworkFilter: React.FC<
 
           <Spacer y={2} />
 
-          {FilterPillsSection}
-
           <Text variant="sm" fontWeight="bold">
             {totalCountLabel}
           </Text>
@@ -288,59 +286,41 @@ export const BaseArtworkFilter: React.FC<
             filtered_artworks={viewer.filtered_artworks!}
             isLoading={isFetching}
             offset={offset}
-            columnCount={[2, 2, 2, 3]}
+            columnCount={[2, 2, 3, 4]}
           />
         </Box>
       </Media>
 
       {/* Desktop Artwork Filter */}
       <Media greaterThan="xs">
-        <GridColumns mb={4} alignItems="center">
-          <Column span={3}>
-            <Text variant="xs">Filter by</Text>
-          </Column>
-
-          <Column span={6}>
-            <Text variant="sm" fontWeight="bold">
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" alignItems="center" gap={2}>
+            <Text variant="sm" fontWeight="bold" flexShrink={0}>
               {totalCountLabel}
             </Text>
-          </Column>
 
-          <Column span={3}>
-            <ArtworkSortFilter />
-          </Column>
-        </GridColumns>
+            <ArtworkFilterPills />
+          </Box>
 
-        <GridColumns>
-          <Column span={3}>
-            {Filters ? (
-              Filters
-            ) : (
-              <ArtworkFilters
-                user={user}
-                relayEnvironment={relay.environment}
-              />
-            )}
-          </Column>
+          <Box display="flex" alignItems="center">
+            <ArtworkFilterCreateAlert />
 
-          <Column
-            span={9}
-            // Fix for issue in Firefox where contents overflow container.
-            // Safe to remove once artwork masonry uses CSS grid.
-            width="100%"
-          >
-            {FilterPillsSection}
+            <ArtworkFilterDrawer>
+              {Filters ? Filters : <ArtworkFilters user={user} />}
+            </ArtworkFilterDrawer>
+          </Box>
+        </Box>
 
-            {children || (
-              <ArtworkFilterArtworkGrid
-                filtered_artworks={viewer.filtered_artworks!}
-                isLoading={isFetching}
-                offset={offset}
-                columnCount={[2, 2, 2, 3]}
-              />
-            )}
-          </Column>
-        </GridColumns>
+        <Spacer y={4} />
+
+        {children || (
+          <ArtworkFilterArtworkGrid
+            filtered_artworks={viewer.filtered_artworks!}
+            isLoading={isFetching}
+            offset={offset}
+            columnCount={[2, 2, 3, 4]}
+          />
+        )}
       </Media>
     </Box>
   )

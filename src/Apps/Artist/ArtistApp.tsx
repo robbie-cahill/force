@@ -43,11 +43,11 @@ const ArtistApp: React.FC<ArtistAppProps> = ({ artist, children }) => {
           <ArtistHeaderFragmentContainer artist={artist} />
         )}
 
-        <Spacer y={[4, 12]} />
+        {/* <Spacer y={[4, 12]} /> */}
 
         <Jump id="artistContentArea" />
 
-        <RouteTabs fill data-test="navigationTabs">
+        <RouteTabs data-test="navigationTabs">
           <RouteTab exact to={`/artist/${artist.slug}`}>
             Artworks
           </RouteTab>
