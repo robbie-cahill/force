@@ -42,7 +42,6 @@ export type SavedSearchDefaultCriteria = {
 }
 
 export interface SavedSearchEntity {
-  placeholder: string
   owner: SavedSearchEntityOwner
   defaultCriteria: SavedSearchDefaultCriteria
 }
@@ -57,7 +56,7 @@ export type FilterPill = {
 export type SavedSearchFrequency = "daily" | "instant"
 
 export interface SavedSearchAleftFormValues {
-  name: string
+  name: string | undefined
   email: boolean
   push: boolean
   frequency: SavedSearchFrequency

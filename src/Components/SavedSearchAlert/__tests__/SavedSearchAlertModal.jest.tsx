@@ -21,7 +21,6 @@ const formInitialValues: SavedSearchAleftFormValues = {
 }
 
 const savedSearchEntity: SavedSearchEntity = {
-  placeholder: "Test Artist",
   defaultCriteria: {
     artistIDs: [
       {
@@ -109,14 +108,6 @@ describe("SavedSearchAlertModal", () => {
     expect(screen.getByRole("textbox")).toHaveValue("")
     expect(screen.getAllByRole("checkbox")[0]).toBeChecked()
     expect(screen.getAllByRole("checkbox")[1]).not.toBeChecked()
-  })
-
-  it("alert name generated correctly", () => {
-    render(<TestComponent />)
-    expect(screen.getByRole("textbox")).toHaveAttribute(
-      "placeholder",
-      "Test Artist"
-    )
   })
 
   it("email value changes correctly", () => {

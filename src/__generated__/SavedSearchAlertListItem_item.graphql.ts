@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<13aea50abff22cb6c2adb8fb12b10633>>
+ * @generated SignedSource<<2239c3cef6b18e5f7eb31d0e4f52c223>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,14 +12,12 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SavedSearchAlertListItem_item$data = {
   readonly artistIDs: ReadonlyArray<string> | null;
+  readonly displayName: string;
   readonly href: string;
   readonly internalID: string;
   readonly labels: ReadonlyArray<{
     readonly displayValue: string;
   }>;
-  readonly userAlertSettings: {
-    readonly name: string | null;
-  };
   readonly " $fragmentType": "SavedSearchAlertListItem_item";
 };
 export type SavedSearchAlertListItem_item$key = {
@@ -38,6 +36,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "internalID",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "displayName",
       "storageKey": null
     },
     {
@@ -71,30 +76,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "SavedSearchUserAlertSettings",
-      "kind": "LinkedField",
-      "name": "userAlertSettings",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "SearchCriteria",
   "abstractKey": null
 };
 
-(node as any).hash = "fe0b5b2fbd78d012e3bbf601026a5ece";
+(node as any).hash = "384cadb8a434cadcb7bce33148e04dfa";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e95b2ff723175497a174201c568d0a9>>
+ * @generated SignedSource<<0e80a1778b1dd4e7bf6788299a913d3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,14 +25,12 @@ export type SavedSearchAlertsApp_Test_Query$rawResponse = {
         readonly node: {
           readonly __typename: "SearchCriteria";
           readonly artistIDs: ReadonlyArray<string> | null;
+          readonly displayName: string;
           readonly href: string;
           readonly internalID: string;
           readonly labels: ReadonlyArray<{
             readonly displayValue: string;
           }>;
-          readonly userAlertSettings: {
-            readonly name: string | null;
-          };
         } | null;
       } | null> | null;
       readonly pageInfo: {
@@ -137,6 +135,13 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "displayName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "artistIDs",
                         "storageKey": null
                       },
@@ -160,24 +165,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "displayValue",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "SavedSearchUserAlertSettings",
-                        "kind": "LinkedField",
-                        "name": "userAlertSettings",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
                             "storageKey": null
                           }
                         ],
@@ -255,12 +242,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fd3ebff13beb53901ec6c118e7c25673",
+    "cacheID": "9b76975b301978a09b1a71a525e1fbdb",
     "id": null,
     "metadata": {},
     "name": "SavedSearchAlertsApp_Test_Query",
     "operationKind": "query",
-    "text": "query SavedSearchAlertsApp_Test_Query {\n  me {\n    ...SavedSearchAlertsApp_me\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n  userAlertSettings {\n    name\n  }\n}\n\nfragment SavedSearchAlertsApp_me on Me {\n  savedSearchesConnection(first: 10, sort: CREATED_AT_DESC) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query SavedSearchAlertsApp_Test_Query {\n  me {\n    ...SavedSearchAlertsApp_me\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  displayName\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n}\n\nfragment SavedSearchAlertsApp_me on Me {\n  savedSearchesConnection(first: 10, sort: CREATED_AT_DESC) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

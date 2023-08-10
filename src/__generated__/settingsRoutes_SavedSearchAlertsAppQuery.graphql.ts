@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f24bb08f1d82bea92b8e3ef1c548b8b0>>
+ * @generated SignedSource<<a9c20c26496cccbe4d10089bb73c638a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -110,6 +110,13 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "displayName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "artistIDs",
                         "storageKey": null
                       },
@@ -133,24 +140,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "displayValue",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "SavedSearchUserAlertSettings",
-                        "kind": "LinkedField",
-                        "name": "userAlertSettings",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
                             "storageKey": null
                           }
                         ],
@@ -228,12 +217,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "377bf13459cdc949ba875c39b58b06a9",
+    "cacheID": "6341234470375d199535645e6aad2f5e",
     "id": null,
     "metadata": {},
     "name": "settingsRoutes_SavedSearchAlertsAppQuery",
     "operationKind": "query",
-    "text": "query settingsRoutes_SavedSearchAlertsAppQuery {\n  me {\n    ...SavedSearchAlertsApp_me\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n  userAlertSettings {\n    name\n  }\n}\n\nfragment SavedSearchAlertsApp_me on Me {\n  savedSearchesConnection(first: 10, sort: CREATED_AT_DESC) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query settingsRoutes_SavedSearchAlertsAppQuery {\n  me {\n    ...SavedSearchAlertsApp_me\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  displayName\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n}\n\nfragment SavedSearchAlertsApp_me on Me {\n  savedSearchesConnection(first: 10, sort: CREATED_AT_DESC) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

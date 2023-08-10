@@ -78,14 +78,13 @@ const SavedSearchAlertEditForm: React.FC<SavedSearchAlertEditFormProps> = ({
   const { trackEvent } = useTracking()
   const {
     pills,
-    entity,
     criteria,
     isCriteriaChanged,
     removePill,
   } = useSavedSearchAlertContext()
 
   const initialValues: SavedSearchAleftFormValues = {
-    name: userAlertSettings.name ?? "",
+    name: userAlertSettings.name || undefined,
     push: userAlertSettings.push,
     email: userAlertSettings.email,
     frequency: userAlertSettings.frequency as SavedSearchFrequency,
@@ -106,7 +105,6 @@ const SavedSearchAlertEditForm: React.FC<SavedSearchAlertEditFormProps> = ({
     try {
       const updatedAlertSettings: SavedSearchAleftFormValues = {
         ...values,
-        name: values.name || entity.placeholder,
         frequency: values.push ? values.frequency : DEFAULT_FREQUENCY,
       }
 
@@ -160,7 +158,6 @@ const SavedSearchAlertEditForm: React.FC<SavedSearchAlertEditFormProps> = ({
               <Input
                 title="Alert Name"
                 name="name"
-                placeholder={entity.placeholder}
                 value={values.name}
                 onChange={handleChange("name")}
                 onBlur={handleBlur("name")}
@@ -303,7 +300,6 @@ const SavedSearchAlertEditFormContainer: React.FC<SavedSearchAlertEditFormProps>
   )
 
   const entity: SavedSearchEntity = {
-    placeholder: defaultArtistsCriteria[0].displayValue,
     defaultCriteria: {
       artistIDs: defaultArtistsCriteria,
     },
@@ -312,7 +308,7 @@ const SavedSearchAlertEditFormContainer: React.FC<SavedSearchAlertEditFormProps>
       id: savedSearch?.internalID!,
       // alert doesn't have a slug, for this reason we pass internalID
       slug: savedSearch?.internalID!,
-      name: savedSearch?.userAlertSettings.name ?? "",
+      name: savedSearch?.displayName!,
     },
   }
 
@@ -344,6 +340,7 @@ export const SavedSearchAlertEditFormFragmentContainer = createFragmentContainer
         @argumentDefinitions(savedSearchId: { type: "ID" }) {
         savedSearch(id: $savedSearchId) {
           internalID
+          displayName
           acquireable
           additionalGeneIDs
           artistIDs

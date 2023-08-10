@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4983c80fb076b6f566fb697870c2799>>
+ * @generated SignedSource<<d6c9b5531aa58f55c207fa06540153cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -147,6 +147,13 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "displayName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "artistIDs",
                         "storageKey": null
                       },
@@ -170,24 +177,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "displayValue",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "SavedSearchUserAlertSettings",
-                        "kind": "LinkedField",
-                        "name": "userAlertSettings",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
                             "storageKey": null
                           }
                         ],
@@ -265,12 +254,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f22322436464e7d3f0d87b7696464add",
+    "cacheID": "715c8fd3d778c4a0a0a5d125c33510a8",
     "id": null,
     "metadata": {},
     "name": "SavedSearchAlertsAppRefetchQuery",
     "operationKind": "query",
-    "text": "query SavedSearchAlertsAppRefetchQuery(\n  $after: String\n  $count: Int!\n  $sort: SavedSearchesSortEnum\n) {\n  me {\n    ...SavedSearchAlertsApp_me_3P8D4U\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n  userAlertSettings {\n    name\n  }\n}\n\nfragment SavedSearchAlertsApp_me_3P8D4U on Me {\n  savedSearchesConnection(first: $count, after: $after, sort: $sort) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query SavedSearchAlertsAppRefetchQuery(\n  $after: String\n  $count: Int!\n  $sort: SavedSearchesSortEnum\n) {\n  me {\n    ...SavedSearchAlertsApp_me_3P8D4U\n    id\n  }\n}\n\nfragment SavedSearchAlertListItem_item on SearchCriteria {\n  internalID\n  displayName\n  artistIDs\n  href\n  labels {\n    displayValue\n  }\n}\n\nfragment SavedSearchAlertsApp_me_3P8D4U on Me {\n  savedSearchesConnection(first: $count, after: $after, sort: $sort) {\n    edges {\n      node {\n        internalID\n        ...SavedSearchAlertListItem_item\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

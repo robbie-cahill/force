@@ -61,7 +61,7 @@ export const SavedSearchAlertListItem: React.FC<SavedSearchAlertListItemProps> =
             variant={["md", "lg"]}
             color={variant === "active" ? "blue100" : "black100"}
           >
-            {item.userAlertSettings.name}
+            {item.displayName}
           </Text>
           <Spacer x={2} y={2} />
           <Clickable textDecoration="underline" onClick={toggleExpandFilters}>
@@ -77,7 +77,7 @@ export const SavedSearchAlertListItem: React.FC<SavedSearchAlertListItemProps> =
             onClick={() => {
               onEditAlertClick({
                 id: item.internalID,
-                name: item.userAlertSettings.name!,
+                name: item.displayName!,
                 artistIds: item.artistIDs as string[],
               })
             }}
@@ -117,13 +117,11 @@ export const SavedSearchAlertListItemFragmentContainer = createFragmentContainer
     item: graphql`
       fragment SavedSearchAlertListItem_item on SearchCriteria {
         internalID
+        displayName
         artistIDs
         href
         labels {
           displayValue
-        }
-        userAlertSettings {
-          name
         }
       }
     `,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fef1405178a6f20aba9a806141d254e>>
+ * @generated SignedSource<<768a2324c68760e367a69c41e77134cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type SavedSearchAlertEditForm_me$data = {
     readonly attributionClass: ReadonlyArray<string>;
     readonly colors: ReadonlyArray<string>;
     readonly dimensionRange: string | null;
+    readonly displayName: string;
     readonly height: string | null;
     readonly inquireableOnly: boolean | null;
     readonly internalID: string;
@@ -76,6 +77,13 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "internalID",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "displayName",
           "storageKey": null
         },
         {
@@ -244,6 +252,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "37ee1dfe8af0053119d548baf48b2162";
+(node as any).hash = "3b291d4e4b2097b741cef30c18ad6e4f";
 
 export default node;

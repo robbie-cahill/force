@@ -81,7 +81,6 @@ describe("ActiveFilterPillsAndCreateAlert", () => {
 })
 
 const mockedSavedSearchEntity: SavedSearchEntity = {
-  placeholder: "Test Artist",
   defaultCriteria: {},
   owner: {
     type: OwnerType.artist,

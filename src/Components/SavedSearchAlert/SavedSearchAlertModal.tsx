@@ -76,7 +76,7 @@ export const SavedSearchAlertModal: FC<SavedSearchAlertFormProps> = ({
     }
 
     const userAlertSettings: SavedSearchAleftFormValues = {
-      name: values.name || entity.placeholder,
+      name: values.name,
       email: values.email,
       push: values.push,
       frequency: values.push ? values.frequency : DEFAULT_FREQUENCY,
@@ -133,7 +133,6 @@ export const SavedSearchAlertModal: FC<SavedSearchAlertFormProps> = ({
               <Input
                 title="Alert Name"
                 name="name"
-                placeholder={entity.placeholder}
                 value={values.name}
                 onChange={handleChange("name")}
                 onBlur={handleBlur("name")}
