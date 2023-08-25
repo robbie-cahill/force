@@ -19,19 +19,20 @@ export const SaleEndYearFilter: React.FC = () => {
     aggregations
       ?.find(aggregation => aggregation.slice === "LOTS_BY_SALE_YEAR")
       ?.counts.filter(c => c !== null) || []
-  ).map(c => ({
-    text: c?.name,
-    value: c?.name,
-  }))
+  ).map(c => ({ text: c?.name, value: c?.name }))
 
-  React.useEffect(() => {
-    if (!saleEndYear) {
-      setFilter?.("saleEndYear", new Date().getFullYear())
-    }
-    if (!saleStartYear && options.length > 0) {
-      setFilter?.("saleStartYear", parseInt(options[0].value))
-    }
-  }, [saleEndYear, saleStartYear, setFilter, options])
+  // All options less than the end year
+  const startOptions = options.filter(
+    option =>
+      parseInt(option.value) <=
+      (saleEndYear || parseInt(options[options.length - 1]?.value))
+  )
+
+  // All options greater than the start year
+  const endOptions = options.filter(
+    option =>
+      parseInt(option.value) >= (saleStartYear || parseInt(options[0]?.value))
+  )
 
   return (
     <FilterExpandable label="Sale Date" expanded>
@@ -40,16 +41,18 @@ export const SaleEndYearFilter: React.FC = () => {
           <Flex>
             <Select
               title="Start year"
-              options={options}
+              options={startOptions}
               onSelect={year => setFilter?.("saleStartYear", parseInt(year))}
-              defaultValue={options[0]?.value}
+              defaultValue={startOptions[0]?.value}
             />
+
             <Spacer x={1} />
+
             <Select
               title="End year"
-              options={options}
+              options={endOptions}
               onSelect={year => setFilter?.("saleEndYear", parseInt(year))}
-              defaultValue={new Date().getFullYear().toString()}
+              defaultValue={endOptions[0]?.value}
             />
           </Flex>
 
