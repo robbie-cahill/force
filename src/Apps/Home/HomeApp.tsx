@@ -7,7 +7,6 @@ import { HomeFeaturedMarketNewsQueryRenderer } from "./Components/HomeFeaturedMa
 import { HomeFeaturedEventsRailFragmentContainer } from "./Components/HomeFeaturedEventsRail"
 import { HomeMeta } from "./Components/HomeMeta"
 import { FlashBannerQueryRenderer } from "Components/FlashBanner"
-import { HomeFeaturedGalleriesRailQueryRenderer } from "./Components/HomeFeaturedGalleriesRail"
 import { HomeFeaturedShowsRailQueryRenderer } from "./Components/HomeFeaturedShowsRail"
 import { HomeCurrentFairsQueryRenderer } from "./Components/HomeCurrentFairs"
 import { HomeTrendingArtistsRailQueryRenderer } from "./Components/HomeTrendingArtistsRail"
@@ -17,6 +16,8 @@ import { MyBidsQueryRenderer } from "Apps/Auctions/Components/MyBids/MyBids"
 import { HomeEmergingPicksArtworksRailQueryRenderer } from "./Components/HomeEmergingPicksArtworksRail"
 import { HomeHeroUnitsFragmentContainer } from "./Components/HomeHeroUnits"
 import { HomeNewWorksFromGalleriesYouFollowRailQueryRenderer } from "Apps/Home/Components/HomeNewWorksFromGalleriesYouFollowRail"
+import { HomeGalleriesTabBar } from "Apps/Home/Components/HomeGalleriesTabBar"
+import { HomeFeaturedGalleriesRailQueryRenderer } from "Apps/Home/Components/HomeFeaturedGalleriesRail"
 
 interface HomeAppProps {
   featuredEventsOrderedSet: HomeApp_featuredEventsOrderedSet$data | null
@@ -30,6 +31,8 @@ export const HomeApp: React.FC<HomeAppProps> = ({
   return (
     <>
       <HomeMeta />
+
+      <HomeGalleriesTabBar />
 
       <FlashBannerQueryRenderer />
 
