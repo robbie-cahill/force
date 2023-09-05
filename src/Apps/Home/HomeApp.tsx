@@ -18,6 +18,7 @@ import { HomeHeroUnitsFragmentContainer } from "./Components/HomeHeroUnits"
 import { HomeNewWorksFromGalleriesYouFollowRailQueryRenderer } from "Apps/Home/Components/HomeNewWorksFromGalleriesYouFollowRail"
 import { HomeGalleriesTabBar } from "Apps/Home/Components/HomeGalleriesTabBar"
 import { HomeFeaturedGalleriesRailQueryRenderer } from "Apps/Home/Components/HomeFeaturedGalleriesRail"
+import { useFeatureFlag } from "System/useFeatureFlag"
 
 interface HomeAppProps {
   featuredEventsOrderedSet: HomeApp_featuredEventsOrderedSet$data | null
@@ -28,11 +29,19 @@ export const HomeApp: React.FC<HomeAppProps> = ({
   featuredEventsOrderedSet,
   heroUnitsConnection,
 }) => {
+  const enableGalleriesNearYouRail = useFeatureFlag(
+    "onyx_galleries-near-you-home-rail"
+  )
+
   return (
     <>
       <HomeMeta />
 
-      <HomeGalleriesTabBar />
+      {enableGalleriesNearYouRail ? (
+        <HomeGalleriesTabBar />
+      ) : (
+        <HomeFeaturedGalleriesRailQueryRenderer />
+      )}
 
       <FlashBannerQueryRenderer />
 

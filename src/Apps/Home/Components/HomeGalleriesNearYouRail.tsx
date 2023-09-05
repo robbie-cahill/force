@@ -4,7 +4,7 @@ import {
   ContextModule,
   OwnerType,
 } from "@artsy/cohesion"
-import { Button, Skeleton } from "@artsy/palette"
+import { Button, Skeleton, useToasts } from "@artsy/palette"
 import {
   CellPartnerFragmentContainer,
   CellPartnerPlaceholder,
@@ -30,6 +30,7 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
   relay,
 }) => {
   const { trackEvent } = useTracking()
+  const { sendToast } = useToasts()
 
   const [isLoading, setIsLoading] = useState(false)
   const [position, setPosition] = useState<GeolocationPosition | null>(null)
@@ -58,20 +59,48 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
     if (navigator.geolocation) {
       setIsLoading(true)
 
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log({ position })
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          console.log({ position })
 
-        setPosition(position)
-        refetch()
-      }),
+          setPosition(position)
+          refetch()
+        },
         () => {
           setIsLoading(false)
+
           console.error("Geolocation not supported")
+          sendToast({
+            variant: "error",
+            message: "Could not get your location",
+          })
+        },
+        {
+          // timeout: 10000,
         }
+      )
     } else {
-      console.error("Geolocation not supported")
+      // console.error("Geolocation not supported")
+      // sendToast({
+      //   variant: "error",
+      //   message: "Could not get your location",
+      // })
     }
   }
+
+  const NearMeButton = !position && (
+    <Button
+      onClick={() => requestLocation()}
+      loading={isLoading}
+      variant="secondaryNeutral"
+      size="small"
+      ml={[1, 2]}
+    >
+      Near Me
+    </Button>
+  )
+
+  // console.log({ position })
 
   const nodes = extractNodes(partnersConnection)
 
@@ -81,13 +110,9 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
 
   return (
     <>
-      {!position && (
-        <Button onClick={() => requestLocation()} loading={isLoading}>
-          Near Me
-        </Button>
-      )}
       <Rail
         title="Berlin"
+        titleExtensionComponent={NearMeButton}
         countLabel={partnersConnection?.totalCount ?? 0}
         viewAllLabel="View All Galleries"
         viewAllHref="/galleries"
@@ -103,7 +128,7 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
           trackEvent(trackingEvent)
         }}
         getItems={() =>
-          nodes.map((node, index) => (
+          nodes.map(node => (
             <CellPartnerFragmentContainer
               key={node.internalID}
               partner={node}

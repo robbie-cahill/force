@@ -12,6 +12,7 @@ export interface RailHeaderProps {
   viewAllHref?: string | null
   viewAllLabel?: string
   viewAllOnClick?(event: React.MouseEvent<HTMLElement, MouseEvent>): void
+  titleExtensionComponent?: React.ReactNode
 }
 
 type RailHeaderTitleProps = Pick<
@@ -41,6 +42,7 @@ export const RailHeader: React.FC<RailHeaderProps> = ({
   viewAllHref: _viewAllHref,
   viewAllLabel,
   viewAllOnClick = () => null,
+  titleExtensionComponent,
 }) => {
   const Text = isLoading ? SkeletonText : BaseText
 
@@ -60,6 +62,7 @@ export const RailHeader: React.FC<RailHeaderProps> = ({
           {countLabel && countLabel > 1 && (
             <Sup color="brand">{countLabel}</Sup>
           )}
+          {titleExtensionComponent}
         </Text>
 
         {subTitle && (
