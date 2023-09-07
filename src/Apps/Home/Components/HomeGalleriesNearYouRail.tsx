@@ -133,8 +133,7 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
         viewAllOnClick={() => {
           const trackingEvent: ClickedGalleryGroup = {
             action: ActionType.clickedGalleryGroup,
-            // TODO: Fix this
-            context_module: ContextModule.featuredGalleriesRail,
+            context_module: ContextModule.galleriesNearYouRail,
             context_page_owner_type: OwnerType.home,
             destination_page_owner_type: OwnerType.galleries,
             type: "viewAll",
@@ -149,8 +148,7 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
               onClick={() => {
                 const trackingEvent: ClickedGalleryGroup = {
                   action: ActionType.clickedGalleryGroup,
-                  // TODO: Fix this
-                  context_module: ContextModule.featuredGalleriesRail,
+                  context_module: ContextModule.galleriesNearYouRail,
                   context_page_owner_type: OwnerType.home,
                   destination_page_owner_id: node.internalID,
                   destination_page_owner_slug: node.slug,
@@ -254,51 +252,53 @@ const queryVariables = {
   count: 20,
 }
 
-export const HomeGalleriesNearYouRailQueryRenderer: React.FC = () => {
-  const { relayEnvironment } = useSystemContext()
+export const HomeGalleriesNearYouRailQueryRenderer: React.FC = React.memo(
+  () => {
+    const { relayEnvironment } = useSystemContext()
 
-  return (
-    <SystemQueryRenderer<HomeGalleriesNearYouRailQuery>
-      lazyLoad
-      environment={relayEnvironment}
-      query={graphql`
-        query HomeGalleriesNearYouRailQuery(
-          $includePartnersNearIpBasedLocation: Boolean!
-          $near: String
-          $count: Int
-          $after: String
-        ) {
-          ...HomeGalleriesNearYouRail_requestLocation
+    return (
+      <SystemQueryRenderer<HomeGalleriesNearYouRailQuery>
+        lazyLoad
+        environment={relayEnvironment}
+        query={graphql`
+          query HomeGalleriesNearYouRailQuery(
+            $includePartnersNearIpBasedLocation: Boolean!
+            $near: String
+            $count: Int
+            $after: String
+          ) {
+            ...HomeGalleriesNearYouRail_requestLocation
 
-          ...HomeGalleriesNearYouRail_query
-            @arguments(
-              count: $count
-              after: $after
-              includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
-              near: $near
-            )
-        }
-      `}
-      variables={queryVariables}
-      placeholder={PLACEHOLDER}
-      render={({ error, props }) => {
-        console.log("yeah")
-        if (error) {
-          console.error(error)
-          return null
-        }
+            ...HomeGalleriesNearYouRail_query
+              @arguments(
+                count: $count
+                after: $after
+                includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
+                near: $near
+              )
+          }
+        `}
+        variables={queryVariables}
+        placeholder={PLACEHOLDER}
+        render={({ error, props }) => {
+          console.log("yeah")
+          if (error) {
+            console.error(error)
+            return null
+          }
 
-        if (!props) {
-          return PLACEHOLDER
-        }
+          if (!props) {
+            return PLACEHOLDER
+          }
 
-        return (
-          <HomeGalleriesNearYouRailRefetchContainer
-            query={props}
-            requestLocation={props}
-          />
-        )
-      }}
-    />
-  )
-}
+          return (
+            <HomeGalleriesNearYouRailRefetchContainer
+              query={props}
+              requestLocation={props}
+            />
+          )
+        }}
+      />
+    )
+  }
+)

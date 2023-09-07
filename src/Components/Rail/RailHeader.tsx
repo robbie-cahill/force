@@ -53,18 +53,20 @@ export const RailHeader: React.FC<RailHeaderProps> = ({
   return (
     <Flex justifyContent="space-between" alignItems="center">
       <Box pr={2}>
-        <Text variant="lg-display" as="h3" lineClamp={2} mr={2}>
-          <RailHeaderTitle
-            title={title}
-            viewAllHref={viewAllHref}
-            viewAllOnClick={viewAllOnClick}
-          />{" "}
-          {countLabel && countLabel > 1 && (
-            <Sup color="brand">{countLabel}</Sup>
-          )}
-          {titleExtensionComponent}
-        </Text>
+        <Flex flexDirection="row">
+          <Text variant="lg-display" as="h3" lineClamp={2} mr={2}>
+            <RailHeaderTitle
+              title={title}
+              viewAllHref={viewAllHref}
+              viewAllOnClick={viewAllOnClick}
+            />{" "}
+            {countLabel && countLabel > 1 && (
+              <Sup color="brand">{countLabel}</Sup>
+            )}
+          </Text>
 
+          {titleExtensionComponent}
+        </Flex>
         {subTitle && (
           <Text
             display={["none", "block"]}
