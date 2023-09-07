@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<79a5c74bbf0ba3784321bd46e223c154>>
+ * @generated SignedSource<<5014556632659ee8ee84301fa0702783>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,14 +17,7 @@ export type HomeGalleriesNearYouRailRefetchQuery$variables = {
   near?: string | null;
 };
 export type HomeGalleriesNearYouRailRefetchQuery$data = {
-  readonly partnersConnection: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly internalID: string;
-      } | null;
-    } | null> | null;
-    readonly " $fragmentSpreads": FragmentRefs<"HomeGalleriesNearYouRail_partnersConnection">;
-  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"HomeGalleriesNearYouRail_query" | "HomeGalleriesNearYouRail_requestLocation">;
 };
 export type HomeGalleriesNearYouRailRefetchQuery = {
   response: HomeGalleriesNearYouRailRefetchQuery$data;
@@ -52,77 +45,26 @@ v3 = {
   "kind": "LocalArgument",
   "name": "near"
 },
-v4 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Literal",
-    "name": "defaultProfilePublic",
-    "value": true
-  },
-  {
-    "kind": "Literal",
-    "name": "eligibleForListing",
-    "value": true
-  },
-  {
-    "kind": "Literal",
-    "name": "excludeFollowedPartners",
-    "value": true
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "count"
-  },
-  {
-    "kind": "Variable",
-    "name": "includePartnersNearIpBasedLocation",
-    "variableName": "includePartnersNearIpBasedLocation"
-  },
-  {
-    "kind": "Literal",
-    "name": "maxDistance",
-    "value": 100
-  },
-  {
-    "kind": "Variable",
-    "name": "near",
-    "variableName": "near"
-  },
-  {
-    "kind": "Literal",
-    "name": "sort",
-    "value": "DISTANCE"
-  },
-  {
-    "kind": "Literal",
-    "name": "type",
-    "value": "GALLERY"
-  }
-],
+v4 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "internalID",
-  "storageKey": null
+  "kind": "Variable",
+  "name": "includePartnersNearIpBasedLocation",
+  "variableName": "includePartnersNearIpBasedLocation"
 },
 v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
+  "kind": "Variable",
+  "name": "near",
+  "variableName": "near"
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "city",
   "storageKey": null
 },
 v8 = {
@@ -133,16 +75,37 @@ v8 = {
   "storageKey": null
 },
 v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "internalID",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v12 = {
   "kind": "Literal",
   "name": "height",
   "value": 45
 },
-v10 = {
+v13 = {
   "kind": "Literal",
   "name": "width",
   "value": 45
 },
-v11 = [
+v14 = [
   {
     "alias": null,
     "args": null,
@@ -171,43 +134,23 @@ return {
     "name": "HomeGalleriesNearYouRailRefetchQuery",
     "selections": [
       {
-        "alias": null,
-        "args": (v4/*: any*/),
-        "concreteType": "PartnerConnection",
-        "kind": "LinkedField",
-        "name": "partnersConnection",
-        "plural": false,
-        "selections": [
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "HomeGalleriesNearYouRail_requestLocation"
+      },
+      {
+        "args": [
+          (v4/*: any*/),
           {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "HomeGalleriesNearYouRail_partnersConnection"
+            "kind": "Variable",
+            "name": "count",
+            "variableName": "count"
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PartnerEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Partner",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  (v5/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
-        "storageKey": null
+        "kind": "FragmentSpread",
+        "name": "HomeGalleriesNearYouRail_query"
       }
     ],
     "type": "Query",
@@ -226,7 +169,66 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": null,
+        "concreteType": "RequestLocation",
+        "kind": "LinkedField",
+        "name": "requestLocation",
+        "plural": false,
+        "selections": [
+          (v7/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "country",
+            "storageKey": null
+          },
+          (v8/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          (v4/*: any*/),
+          {
+            "kind": "Literal",
+            "name": "defaultProfilePublic",
+            "value": true
+          },
+          {
+            "kind": "Literal",
+            "name": "eligibleForListing",
+            "value": true
+          },
+          {
+            "kind": "Literal",
+            "name": "excludeFollowedPartners",
+            "value": true
+          },
+          {
+            "kind": "Variable",
+            "name": "first",
+            "variableName": "count"
+          },
+          (v5/*: any*/),
+          {
+            "kind": "Literal",
+            "name": "maxDistance",
+            "value": 100
+          },
+          (v6/*: any*/),
+          {
+            "kind": "Literal",
+            "name": "sort",
+            "value": "DISTANCE"
+          },
+          {
+            "kind": "Literal",
+            "name": "type",
+            "value": "GALLERY"
+          }
+        ],
         "concreteType": "PartnerConnection",
         "kind": "LinkedField",
         "name": "partnersConnection",
@@ -255,7 +257,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -263,7 +265,7 @@ return {
                     "name": "type",
                     "storageKey": null
                   },
-                  (v6/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -271,7 +273,7 @@ return {
                     "name": "href",
                     "storageKey": null
                   },
-                  (v7/*: any*/),
+                  (v11/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -309,13 +311,7 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "city",
-                                "storageKey": null
-                              },
+                              (v7/*: any*/),
                               (v8/*: any*/)
                             ],
                             "storageKey": null
@@ -334,8 +330,8 @@ return {
                     "name": "categories",
                     "plural": true,
                     "selections": [
-                      (v7/*: any*/),
-                      (v6/*: any*/),
+                      (v11/*: any*/),
+                      (v10/*: any*/),
                       (v8/*: any*/)
                     ],
                     "storageKey": null
@@ -348,7 +344,7 @@ return {
                     "name": "profile",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/),
+                      (v9/*: any*/),
                       {
                         "alias": "avatar",
                         "args": null,
@@ -360,14 +356,14 @@ return {
                           {
                             "alias": null,
                             "args": [
-                              (v9/*: any*/),
-                              (v10/*: any*/)
+                              (v12/*: any*/),
+                              (v13/*: any*/)
                             ],
                             "concreteType": "CroppedImageUrl",
                             "kind": "LinkedField",
                             "name": "cropped",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v14/*: any*/),
                             "storageKey": "cropped(height:45,width:45)"
                           }
                         ],
@@ -384,7 +380,7 @@ return {
                           {
                             "alias": null,
                             "args": [
-                              (v9/*: any*/),
+                              (v12/*: any*/),
                               {
                                 "kind": "Literal",
                                 "name": "version",
@@ -394,13 +390,13 @@ return {
                                   "square"
                                 ]
                               },
-                              (v10/*: any*/)
+                              (v13/*: any*/)
                             ],
                             "concreteType": "CroppedImageUrl",
                             "kind": "LinkedField",
                             "name": "cropped",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v14/*: any*/),
                             "storageKey": "cropped(height:45,version:[\"untouched-png\",\"large\",\"square\"],width:45)"
                           }
                         ],
@@ -443,7 +439,7 @@ return {
                             "kind": "LinkedField",
                             "name": "cropped",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v14/*: any*/),
                             "storageKey": "cropped(height:334,version:[\"wide\",\"large\",\"featured\",\"larger\"],width:445)"
                           }
                         ],
@@ -465,16 +461,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6bce24ba0c63ce74896831fedd47277a",
+    "cacheID": "76810d3992d44c747bec593c2b59c09e",
     "id": null,
     "metadata": {},
     "name": "HomeGalleriesNearYouRailRefetchQuery",
     "operationKind": "query",
-    "text": "query HomeGalleriesNearYouRailRefetchQuery(\n  $includePartnersNearIpBasedLocation: Boolean!\n  $near: String\n  $count: Int\n  $after: String\n) {\n  partnersConnection(first: $count, after: $after, eligibleForListing: true, excludeFollowedPartners: true, includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation, defaultProfilePublic: true, sort: DISTANCE, maxDistance: 100, near: $near, type: GALLERY) {\n    ...HomeGalleriesNearYouRail_partnersConnection\n    edges {\n      node {\n        internalID\n        id\n      }\n    }\n  }\n}\n\nfragment CellPartner_partner on Partner {\n  ...EntityHeaderPartner_partner\n  internalID\n  slug\n  name\n  href\n  initials\n  locationsConnection(first: 15) {\n    edges {\n      node {\n        city\n        id\n      }\n    }\n  }\n  categories {\n    name\n    slug\n    id\n  }\n  profile {\n    image {\n      cropped(width: 445, height: 334, version: [\"wide\", \"large\", \"featured\", \"larger\"]) {\n        src\n        srcSet\n      }\n    }\n    id\n  }\n}\n\nfragment EntityHeaderPartner_partner on Partner {\n  internalID\n  type\n  slug\n  href\n  name\n  initials\n  locationsConnection(first: 15) {\n    edges {\n      node {\n        city\n        id\n      }\n    }\n  }\n  categories {\n    name\n    slug\n    id\n  }\n  profile {\n    internalID\n    avatar: image {\n      cropped(width: 45, height: 45) {\n        src\n        srcSet\n      }\n    }\n    icon {\n      cropped(width: 45, height: 45, version: [\"untouched-png\", \"large\", \"square\"]) {\n        src\n        srcSet\n      }\n    }\n    id\n  }\n}\n\nfragment HomeGalleriesNearYouRail_partnersConnection on PartnerConnection {\n  totalCount\n  edges {\n    node {\n      internalID\n      ...CellPartner_partner\n      slug\n      id\n    }\n  }\n}\n"
+    "text": "query HomeGalleriesNearYouRailRefetchQuery(\n  $includePartnersNearIpBasedLocation: Boolean!\n  $near: String\n  $count: Int\n  $after: String\n) {\n  ...HomeGalleriesNearYouRail_requestLocation\n  ...HomeGalleriesNearYouRail_query_1iEdaF\n}\n\nfragment CellPartner_partner on Partner {\n  ...EntityHeaderPartner_partner\n  internalID\n  slug\n  name\n  href\n  initials\n  locationsConnection(first: 15) {\n    edges {\n      node {\n        city\n        id\n      }\n    }\n  }\n  categories {\n    name\n    slug\n    id\n  }\n  profile {\n    image {\n      cropped(width: 445, height: 334, version: [\"wide\", \"large\", \"featured\", \"larger\"]) {\n        src\n        srcSet\n      }\n    }\n    id\n  }\n}\n\nfragment EntityHeaderPartner_partner on Partner {\n  internalID\n  type\n  slug\n  href\n  name\n  initials\n  locationsConnection(first: 15) {\n    edges {\n      node {\n        city\n        id\n      }\n    }\n  }\n  categories {\n    name\n    slug\n    id\n  }\n  profile {\n    internalID\n    avatar: image {\n      cropped(width: 45, height: 45) {\n        src\n        srcSet\n      }\n    }\n    icon {\n      cropped(width: 45, height: 45, version: [\"untouched-png\", \"large\", \"square\"]) {\n        src\n        srcSet\n      }\n    }\n    id\n  }\n}\n\nfragment HomeGalleriesNearYouRail_query_1iEdaF on Query {\n  partnersConnection(first: $count, after: $after, eligibleForListing: true, excludeFollowedPartners: true, includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation, defaultProfilePublic: true, sort: DISTANCE, maxDistance: 100, near: $near, type: GALLERY) {\n    totalCount\n    edges {\n      node {\n        internalID\n        ...CellPartner_partner\n        slug\n        id\n      }\n    }\n  }\n}\n\nfragment HomeGalleriesNearYouRail_requestLocation on Query {\n  requestLocation {\n    city\n    country\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "40b78200823d9aa52a11464e5fc8fb74";
+(node as any).hash = "65c608916f522f15400af3213960c111";
 
 export default node;

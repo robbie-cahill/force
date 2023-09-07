@@ -16,18 +16,22 @@ import { HomeGalleriesNearYouRailQuery } from "__generated__/HomeGalleriesNearYo
 import * as React from "react"
 import { RelayRefetchProp, createRefetchContainer, graphql } from "react-relay"
 import { useTracking } from "react-tracking"
-import { HomeGalleriesNearYouRail_partnersConnection$data } from "__generated__/HomeGalleriesNearYouRail_partnersConnection.graphql"
+import { HomeGalleriesNearYouRail_query$data } from "__generated__/HomeGalleriesNearYouRail_query.graphql"
+import { HomeGalleriesNearYouRail_requestLocation$data } from "__generated__/HomeGalleriesNearYouRail_requestLocation.graphql"
 import { useState } from "react"
 import { extractNodes } from "Utils/extractNodes"
+import { useEffect, useCallback } from "react"
 
 interface HomeGalleriesNearYouRailProps {
-  partnersConnection: HomeGalleriesNearYouRail_partnersConnection$data | null
+  query: HomeGalleriesNearYouRail_query$data | null
+  requestLocation: HomeGalleriesNearYouRail_requestLocation$data | null
   relay: RelayRefetchProp
 }
 
 const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
-  partnersConnection,
+  query,
   relay,
+  requestLocation,
 }) => {
   const { trackEvent } = useTracking()
   const { sendToast } = useToasts()
@@ -35,7 +39,7 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
   const [isLoading, setIsLoading] = useState(false)
   const [position, setPosition] = useState<GeolocationPosition | null>(null)
 
-  const refetch = () => {
+  const refetch = useCallback(() => {
     relay.refetch(
       {
         ...queryVariables,
@@ -50,19 +54,30 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
           console.error(error)
         }
 
-        setIsLoading(false)
-      }
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 500)
+      },
+      {}
     )
-  }
+  }, [position, relay])
 
-  const requestLocation = () => {
+  useEffect(() => {
+    if (!position) {
+      return
+    }
+
+    refetch()
+  }, [refetch, position])
+
+  const getCurrentPosition = () => {
     if (navigator.geolocation) {
       setIsLoading(true)
 
+      refetch()
+
       navigator.geolocation.getCurrentPosition(
         position => {
-          console.log({ position })
-
           setPosition(position)
           refetch()
         },
@@ -72,25 +87,22 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
           console.error("Geolocation not supported")
           sendToast({
             variant: "error",
-            message: "Could not get your location",
+            message: "Could not get your location.",
           })
-        },
-        {
-          // timeout: 10000,
         }
       )
     } else {
-      // console.error("Geolocation not supported")
-      // sendToast({
-      //   variant: "error",
-      //   message: "Could not get your location",
-      // })
+      console.error("Geolocation not supported")
+      sendToast({
+        variant: "error",
+        message: "Could not get your location.",
+      })
     }
   }
 
-  const NearMeButton = !position && (
+  const NearMeButton = (
     <Button
-      onClick={() => requestLocation()}
+      onClick={() => getCurrentPosition()}
       loading={isLoading}
       variant="secondaryNeutral"
       size="small"
@@ -100,7 +112,9 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
     </Button>
   )
 
-  // console.log({ position })
+  const showNearButton = !position || isLoading
+
+  const partnersConnection = query?.partnersConnection
 
   const nodes = extractNodes(partnersConnection)
 
@@ -111,8 +125,8 @@ const HomeGalleriesNearYouRail: React.FC<HomeGalleriesNearYouRailProps> = ({
   return (
     <>
       <Rail
-        title="Berlin"
-        titleExtensionComponent={NearMeButton}
+        title={requestLocation?.requestLocation?.city ?? "Galleries Near You"}
+        titleExtensionComponent={!!showNearButton && NearMeButton}
         countLabel={partnersConnection?.totalCount ?? 0}
         viewAllLabel="View All Galleries"
         viewAllHref="/galleries"
@@ -172,28 +186,43 @@ const PLACEHOLDER = (
 const HomeGalleriesNearYouRailRefetchContainer = createRefetchContainer(
   HomeGalleriesNearYouRail,
   {
-    // requestLocation: graphql`
-    //   fragment HomeGalleriesNearYouRail_requestLocation on Query {
-    //     requestLocation
-    //       @optionalField
-    //       @include(if: $includePartnersNearIpBasedLocation) {
-    //       coordinates {
-    //         lat
-    //         lng
-    //       }
-    //     }
-    //   }
-    // `,
-    partnersConnection: graphql`
-      fragment HomeGalleriesNearYouRail_partnersConnection on PartnerConnection {
-        totalCount
-        edges {
-          node {
-            internalID
-            ...CellPartner_partner
-            ... on Partner {
+    requestLocation: graphql`
+      fragment HomeGalleriesNearYouRail_requestLocation on Query {
+        requestLocation {
+          city
+          country
+        }
+      }
+    `,
+    query: graphql`
+      fragment HomeGalleriesNearYouRail_query on Query
+        @argumentDefinitions(
+          includePartnersNearIpBasedLocation: { type: "Boolean!" }
+          near: { type: "String" }
+          count: { type: "Int" }
+          after: { type: "String" }
+        ) {
+        partnersConnection(
+          first: $count
+          after: $after
+          eligibleForListing: true
+          excludeFollowedPartners: true
+          includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
+          defaultProfilePublic: true
+          sort: DISTANCE
+          maxDistance: 100
+          near: $near
+          type: GALLERY
+        ) {
+          totalCount
+          edges {
+            node {
               internalID
-              slug
+              ...CellPartner_partner
+              ... on Partner {
+                internalID
+                slug
+              }
             }
           }
         }
@@ -207,27 +236,15 @@ const HomeGalleriesNearYouRailRefetchContainer = createRefetchContainer(
       $count: Int
       $after: String
     ) {
-      # ...HomeGalleriesNearYouRail_requestLocation
+      ...HomeGalleriesNearYouRail_requestLocation
 
-      partnersConnection(
-        first: $count
-        after: $after
-        eligibleForListing: true
-        excludeFollowedPartners: true
-        includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
-        defaultProfilePublic: true
-        sort: DISTANCE
-        maxDistance: 100
-        near: $near
-        type: GALLERY
-      ) {
-        ...HomeGalleriesNearYouRail_partnersConnection
-        edges {
-          node {
-            internalID
-          }
-        }
-      }
+      ...HomeGalleriesNearYouRail_query
+        @arguments(
+          count: $count
+          after: $after
+          includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
+          near: $near
+        )
     }
   `
 )
@@ -251,32 +268,21 @@ export const HomeGalleriesNearYouRailQueryRenderer: React.FC = () => {
           $count: Int
           $after: String
         ) {
-          # ...HomeGalleriesNearYouRail_requestLocation
+          ...HomeGalleriesNearYouRail_requestLocation
 
-          partnersConnection(
-            first: $count
-            after: $after
-            eligibleForListing: true
-            excludeFollowedPartners: true
-            includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
-            defaultProfilePublic: true
-            sort: DISTANCE
-            maxDistance: 100
-            near: $near
-            type: GALLERY
-          ) {
-            ...HomeGalleriesNearYouRail_partnersConnection
-            edges {
-              node {
-                internalID
-              }
-            }
-          }
+          ...HomeGalleriesNearYouRail_query
+            @arguments(
+              count: $count
+              after: $after
+              includePartnersNearIpBasedLocation: $includePartnersNearIpBasedLocation
+              near: $near
+            )
         }
       `}
       variables={queryVariables}
       placeholder={PLACEHOLDER}
       render={({ error, props }) => {
+        console.log("yeah")
         if (error) {
           console.error(error)
           return null
@@ -286,15 +292,12 @@ export const HomeGalleriesNearYouRailQueryRenderer: React.FC = () => {
           return PLACEHOLDER
         }
 
-        if (props) {
-          return (
-            <HomeGalleriesNearYouRailRefetchContainer
-              partnersConnection={props.partnersConnection}
-            />
-          )
-        }
-
-        return null
+        return (
+          <HomeGalleriesNearYouRailRefetchContainer
+            query={props}
+            requestLocation={props}
+          />
+        )
       }}
     />
   )
