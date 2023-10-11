@@ -44,7 +44,7 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({ artist }) => {
   const hasPartnerSuppliedBio = !!artist.biographyBlurb?.credit
   const hasBio = artist.biographyBlurb?.text && !hasPartnerSuppliedBio
   const hasVerifiedRepresentatives = artist?.verifiedRepresentatives?.length > 0
-  const hasInsights = artist.insights.length > 0
+  const hasInsights = artist.insights?.length > 0
   const hasRightDetails = hasVerifiedRepresentatives || hasInsights
   const hasSomething = hasImage || hasBio || hasRightDetails
 
@@ -168,7 +168,7 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({ artist }) => {
                       key={partner.internalID}
                       as={RouterLink}
                       variant="profile"
-                      compact={artist.verifiedRepresentatives.length > 3}
+                      compact={artist.verifiedRepresentatives?.length > 3}
                       {...(partner.profile?.icon
                         ? {
                             src: [

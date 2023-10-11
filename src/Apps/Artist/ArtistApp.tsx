@@ -23,7 +23,7 @@ const ArtistApp: React.FC<ArtistAppProps> = ({ artist, children }) => {
     <>
       <ArtistMetaFragmentContainer artist={artist} />
 
-      <Analytics contextPageOwnerId={artist.internalID}>
+      <Analytics contextPageOwnerId={artist?.internalID}>
         {isRevisedArtistHeader ? (
           <>
             <Spacer y={[0, 4]} />
@@ -45,15 +45,15 @@ const ArtistApp: React.FC<ArtistAppProps> = ({ artist, children }) => {
         <Jump id="artistContentArea" />
 
         <RouteTabs data-test="navigationTabs">
-          <RouteTab exact to={`/artist/${artist.slug}`}>
+          <RouteTab exact to={`/artist/${artist?.slug}`}>
             Artworks
           </RouteTab>
 
-          <RouteTab to={`/artist/${artist.slug}/auction-results`}>
+          <RouteTab to={`/artist/${artist?.slug}/auction-results`}>
             Auction Results
           </RouteTab>
 
-          <RouteTab to={`/artist/${artist.slug}/about`}>About</RouteTab>
+          <RouteTab to={`/artist/${artist?.slug}/about`}>About</RouteTab>
         </RouteTabs>
 
         <Spacer y={[0, 4]} />
