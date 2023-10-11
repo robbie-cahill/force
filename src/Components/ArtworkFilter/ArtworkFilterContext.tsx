@@ -19,6 +19,7 @@ export const initialArtworkFilterState: ArtworkFilters = {
   sizes: [],
   sort: "-decayed_merch",
   artistIDs: [],
+  artistSeriesIDs: [],
   attributionClass: [],
   keyword: undefined,
   partnerIDs: [],
@@ -78,6 +79,7 @@ export const customSizeFilterNames = [
 export interface MultiSelectArtworkFilters {
   attributionClass?: string[]
   artistIDs?: string[]
+  artistSeriesIDs?: string[]
   colors?: string[]
   additionalGeneIDs?: string[]
   majorPeriods?: string[]
@@ -169,6 +171,7 @@ export type SelectedFiltersCounts = {
 export enum SelectedFiltersCountsLabels {
   additionalGeneIDs = "additionalGeneIDs",
   artistIDs = "artistIDs",
+  artistSeriesIDs = "artistSeriesIDs",
   artistNationalities = "artistNationalities",
   attributionClass = "attributionClass",
   colors = "colors",
@@ -464,6 +467,7 @@ const artworkFilterReducer = (
   const arrayFilterTypes: Array<keyof ArtworkFilters> = [
     "sizes",
     "artistIDs",
+    "artistSeriesIDs",
     "attributionClass",
     "partnerIDs",
     "additionalGeneIDs",
