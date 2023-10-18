@@ -142,9 +142,9 @@ export const BaseArtworkFilter: React.FC<
   const total = viewer.filtered_artworks?.counts?.total ?? 0
   const totalCountLabel = getTotalCountLabel({ total, isAuctionArtwork })
 
-  const isRevisedArtworkFilters = useFeatureFlag(
-    "diamond_revised-artwork-filters"
-  )
+  const diamondFaffing = useFeatureFlag("diamond_revised-artwork-filters")
+  const onyxFaffing = useFeatureFlag("onyx_enable-artist-series-filter")
+  const isRevisedArtworkFilters = diamondFaffing && !onyxFaffing
 
   /**
    * Check to see if the current filter is different from the previous filter
