@@ -29,8 +29,9 @@ describe("Alert Modal", () => {
     })
   })
 
+  let alertContext
+
   const StepsTestComponent = () => {
-    let alertContext
     alertContext = useAlertContext()
     return <Steps />
   }
