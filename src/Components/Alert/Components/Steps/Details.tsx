@@ -18,6 +18,7 @@ import { DetailsInput } from "Components/SavedSearchAlert/Components/DetailsInpu
 import { PriceRangeFilter } from "Components/Alert/Components/Form/PriceRange"
 import { useAlertContext } from "Components/Alert/Hooks/useAlertContext"
 import { useFeatureFlag } from "System/useFeatureFlag"
+import { DebugPanel } from "./DebugPanel"
 
 export interface AlertFormikValues {
   name: string
@@ -110,6 +111,8 @@ export const Details: FC = () => {
               >
                 Create Alert
               </Button>
+
+              <DebugPanel />
             </Join>
           </Flex>
         )
