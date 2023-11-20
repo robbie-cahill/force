@@ -44,6 +44,7 @@ import { useEffect, useCallback } from "react"
 import { ADDRESS_VALIDATION_SHAPE } from "Apps/Order/Utils/shippingUtils"
 import { Shipping2_me$data } from "__generated__/Shipping2_me.graphql"
 import { Collapse } from "Apps/Order/Components/Collapse"
+import { USStateAutocompleteInput } from "Components/USStateAutocomplete"
 
 export interface FulfillmentDetailsFormProps {
   // TODO: ideally we don't need to thread shipping2_me through here but that requires
@@ -168,10 +169,8 @@ const FulfillmentDetailsFormLayout = (
     }
   }, [setValues, previousFulfillmentType, values.fulfillmentType])
 
-  // When not showing the form/creating a new address,
-  // inputs should not be tabbable
-  const tabbableFormValue = (activeForm: typeof addressFormMode): 0 | -1 =>
-    addressFormMode === activeForm ? 0 : -1
+  const tabbableForNewAddressMode = addressFormMode === "new_address" ? 0 : -1
+  const tabbableForPickupMode = addressFormMode === "pickup" ? 0 : -1
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const handleSelectSavedAddress = useCallback(
@@ -279,7 +278,7 @@ const FulfillmentDetailsFormLayout = (
             <GridColumns>
               <Column span={12}>
                 <Input
-                  tabIndex={tabbableFormValue("new_address")}
+                  tabIndex={tabbableForNewAddressMode}
                   id="attributes.name"
                   placeholder="Full name"
                   title={"Full name"}
@@ -303,7 +302,7 @@ const FulfillmentDetailsFormLayout = (
                 </Text>
                 <CountrySelect
                   aria-labelledby="country-select"
-                  tabIndex={tabbableFormValue("new_address")}
+                  tabIndex={tabbableForNewAddressMode}
                   selected={values.attributes.country}
                   onSelect={selected =>
                     setFieldValue(`attributes.country`, selected)
@@ -334,7 +333,7 @@ const FulfillmentDetailsFormLayout = (
               <Column span={12}>
                 {!autocomplete.loaded || autocomplete.enabled ? (
                   <AutocompleteInput<AddressAutocompleteSuggestion>
-                    tabIndex={tabbableFormValue("new_address")}
+                    tabIndex={tabbableForNewAddressMode}
                     disabled={!autocomplete.loaded}
                     name="attributes.addressLine1"
                     placeholder="Street address"
@@ -378,7 +377,7 @@ const FulfillmentDetailsFormLayout = (
                   />
                 ) : (
                   <Input
-                    tabIndex={tabbableFormValue("new_address")}
+                    tabIndex={tabbableForNewAddressMode}
                     name="attributes.addressLine1"
                     placeholder="Street address"
                     title="Address line 1"
@@ -397,7 +396,7 @@ const FulfillmentDetailsFormLayout = (
               </Column>
               <Column span={12}>
                 <Input
-                  tabIndex={tabbableFormValue("new_address")}
+                  tabIndex={tabbableForNewAddressMode}
                   name="attributes.addressLine2"
                   placeholder="Apt, floor, suite, etc."
                   title="Address line 2 (optional)"
@@ -415,7 +414,7 @@ const FulfillmentDetailsFormLayout = (
               </Column>
               <Column span={12}>
                 <Input
-                  tabIndex={tabbableFormValue("new_address")}
+                  tabIndex={tabbableForNewAddressMode}
                   name="attributes.city"
                   placeholder="City"
                   title="City"
@@ -429,34 +428,45 @@ const FulfillmentDetailsFormLayout = (
                   data-testid="AddressForm_city"
                 />
               </Column>
-              <Column span={6}>
-                <Input
-                  tabIndex={tabbableFormValue("new_address")}
-                  name="attributes.region"
-                  placeholder={
-                    values.attributes.country === "US"
-                      ? "State"
-                      : "State, province, or region"
-                  }
-                  title={
-                    values.attributes.country === "US"
-                      ? "State"
-                      : "State, province, or region"
-                  }
-                  autoCorrect="off"
-                  value={values.attributes.region}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={
-                    (touched as FormikTouched<ShipValues>).attributes?.region &&
-                    (errors as FormikErrors<ShipValues>).attributes?.region
-                  }
-                  data-testid="AddressForm_region"
-                />
+              <Column data-testid="AddressForm_region" span={6}>
+                {values.attributes.country === "US" ? (
+                  <USStateAutocompleteInput
+                    name="attributes.region"
+                    tabIndex={tabbableForNewAddressMode}
+                    data-testid="AddressForm_region_autocomplete"
+                    value={values.attributes.region}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="State"
+                    title="State"
+                    error={
+                      (touched as FormikTouched<ShipValues>).attributes
+                        ?.region &&
+                      (errors as FormikErrors<ShipValues>).attributes?.region
+                    }
+                  />
+                ) : (
+                  <Input
+                    tabIndex={tabbableForNewAddressMode}
+                    name="attributes.region"
+                    placeholder="State, province, or region"
+                    title="State, province, or region"
+                    autoCorrect="off"
+                    value={values.attributes.region}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      (touched as FormikTouched<ShipValues>).attributes
+                        ?.region &&
+                      (errors as FormikErrors<ShipValues>).attributes?.region
+                    }
+                    data-testid="AddressForm_region"
+                  />
+                )}
               </Column>
               <Column span={6}>
                 <Input
-                  tabIndex={tabbableFormValue("new_address")}
+                  tabIndex={tabbableForNewAddressMode}
                   name="attributes.postalCode"
                   placeholder={
                     values.attributes.country === "US"
@@ -486,7 +496,7 @@ const FulfillmentDetailsFormLayout = (
                 <>
                   <Column span={12}>
                     <Input
-                      tabIndex={tabbableFormValue("new_address")}
+                      tabIndex={tabbableForNewAddressMode}
                       name="attributes.phoneNumber"
                       title="Phone number"
                       type="tel"
@@ -510,7 +520,7 @@ const FulfillmentDetailsFormLayout = (
             <Spacer y={2} />
 
             <Checkbox
-              tabIndex={tabbableFormValue("new_address")}
+              tabIndex={tabbableForNewAddressMode}
               onSelect={selected => {
                 setFieldValue("attributes.saveAddress", selected)
               }}
@@ -531,7 +541,7 @@ const FulfillmentDetailsFormLayout = (
         {values.fulfillmentType === FulfillmentType.PICKUP && (
           <>
             <Input
-              tabIndex={tabbableFormValue("pickup")}
+              tabIndex={tabbableForPickupMode}
               id="attributes.name"
               placeholder="Full name"
               title={"Full name"}
@@ -543,7 +553,7 @@ const FulfillmentDetailsFormLayout = (
               data-testid="AddressForm_name"
             />
             <Input
-              tabIndex={tabbableFormValue("pickup")}
+              tabIndex={tabbableForPickupMode}
               name="attributes.phoneNumber"
               title="Phone number"
               type="tel"

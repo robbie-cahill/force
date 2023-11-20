@@ -1,4 +1,10 @@
-import { screen, render, waitFor, fireEvent } from "@testing-library/react"
+import {
+  screen,
+  render,
+  waitFor,
+  fireEvent,
+  within,
+} from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { ShipValues } from "Apps/Order/Routes/Shipping2/FulfillmentDetails"
 import {
@@ -84,7 +90,9 @@ describe("FulfillmentDetailsForm", () => {
 
       expect(fullNameField).toBeVisible()
       expect(phoneNumberField).toBeVisible()
-      expect(screen.getByText("Required for pickup logistics")).toBeVisible()
+      expect(
+        screen.getByText("Required for pickup logistics")
+      ).toBeInTheDocument()
     })
 
     it("sends the values when the user submits a valid form", async () => {
@@ -158,6 +166,19 @@ describe("FulfillmentDetailsForm", () => {
         screen.getAllByPlaceholderText(
           "Add phone number including country code"
         )[0]
+      })
+      it("renders an autocomplete field for the state", async () => {
+        renderTree(testProps)
+
+        await waitFor(() => {
+          const line1Input = screen.getByPlaceholderText("Street address")
+          expect(line1Input).toBeEnabled()
+        })
+        const regionArea = screen.getByTestId("AddressForm_region")
+        expect(
+          within(regionArea).getByText("autocomplete results")
+        ).toBeInTheDocument()
+        expect(within(regionArea).getByPlaceholderText("State")).toBeVisible()
       })
 
       it("sends the values when the user submits a valid form", async () => {

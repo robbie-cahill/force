@@ -2,6 +2,7 @@ import React from "react"
 
 export interface CollapseProps {
   open: boolean
+  ["data-testid"]?: string
 }
 /**
  * Collapse component for the web
@@ -73,6 +74,7 @@ export class Collapse extends React.Component<CollapseProps> {
   }
 
   render() {
+    const dataTestID = this.props["data-testid"]
     const { children, open } = this.props
     // render explicit height before first change, so SSR works properly.
     // Thereafter we control the height property entirely in componentDidMount
@@ -98,6 +100,7 @@ export class Collapse extends React.Component<CollapseProps> {
           overflow: "hidden",
           ...heightProps,
         }}
+        {...(dataTestID ? { "data-testid": dataTestID } : {})}
       >
         {children}
       </div>
