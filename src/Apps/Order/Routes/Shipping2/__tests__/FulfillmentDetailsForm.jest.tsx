@@ -5,15 +5,15 @@ import {
   FulfillmentDetailsForm,
   FulfillmentDetailsFormProps,
 } from "Apps/Order/Routes/Shipping2/FulfillmentDetailsForm"
-import { ShippingContextProps } from "Apps/Order/Routes/Shipping2/ShippingContext"
-import { FulfillmentType } from "Apps/Order/Routes/Shipping2/shippingUtils"
+import { ShippingContextProps } from "Apps/Order/Routes/Shipping2/Utils/ShippingContext"
+import { FulfillmentType } from "Apps/Order/Routes/Shipping2/Utils/shippingUtils"
 
 const mockOnSubmit = jest.fn()
 const mockOnAddressVerificationComplete = jest.fn()
 let testProps: FulfillmentDetailsFormProps
 let mockShippingContext: ShippingContextProps
 
-jest.mock("Apps/Order/Routes/Shipping2/ShippingContext", () => ({
+jest.mock("Apps/Order/Routes/Shipping2/Hooks/useShippingContext", () => ({
   useShippingContext: () => mockShippingContext,
 }))
 
@@ -48,7 +48,7 @@ beforeEach(() => {
     } as any, // todo: get rid of relay dependency
   }
   mockShippingContext = {
-    computedOrderData: {
+    parsedOrderData: {
       isArtsyShipping: false,
       shippingQuotes: [],
     },
